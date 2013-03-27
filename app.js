@@ -10,17 +10,31 @@ var settings = require('./settings.js')
 
 mongoose.connect(settings.mongoHost)
 
-// TODO: figure out good names for these: timeType, recordInterval, recordWindow
 var schemaObjective = mongoose.Schema({
                         application: String, // used for BNAuth
                         username: String, // used for BNAuth
                         name: String,
                         description: String,
-                        timeType: String, // jatkuva / määräaikainen
-                        recordInterval: String, // minutes, hours, days, weeks, months, years
-                        recordWindow: String, // think how this should be done. Default should be 24 hours if interval is one day, and 7 days if interval is one week.
+                        timeType: {type: String, enum: ['continuous', 'fixed']},
+                        recordInterval: {
+                          years: Number,
+                          months: Number,
+                          weeks: Number,
+                          days: Number,
+                          hours: Number,
+                          minutes: Number
+                        },
+                        recordWindow: { // offset from interval deadline
+                          years: Number,
+                          months: Number,
+                          weeks: Number,
+                          days: Number,
+                          hours: Number,
+                          minutes: Number
+                        },
                         created_timestamp: { type: Date, default: Date.now },
-                        tags: [String]
+                        tags: [String],
+                        active: Boolean
                       })
 
 var Objective = mongoose.model('Objective', schemaObjective)
