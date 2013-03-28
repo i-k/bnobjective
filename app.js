@@ -1,6 +1,7 @@
 /*
  * BNObjective
  *
+ * TODO: route to add objective and entry, testpage for these
  */
 
 var express = require('express')
@@ -34,7 +35,9 @@ var schemaObjective = mongoose.Schema({
                         },
                         created_timestamp: { type: Date, default: Date.now },
                         tags: [String],
-                        active: Boolean
+                        isActive: Boolean,
+                        isPublic: Boolean,
+                        groups: [String] // if not public, then only members of these groups are allowed to see this
                       })
 
 var Objective = mongoose.model('Objective', schemaObjective)
@@ -126,6 +129,57 @@ function validateUser(username, application, sessionId, callback){
     }
   })
 }
+
+app.post('/api/add-objective', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.post('/api/add-entry', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.get('/api/objectives/:user', function(req, res){
+  // params: by tags, by active -status
+  return writeResult(res, 200, "TODO")
+})
+
+app.get('/api/objectives/:objectiveId/entries', function(req, res){
+  // possible params: by tags, by active -status
+  return writeResult(res, 200, "TODO")
+})
+
+app.get('/api/objectives/:user/:objectiveId/entries', function(req, res){
+  // possible params: by tags, by active -status
+  return writeResult(res, 200, "TODO")
+})
+
+app.get('/api/entries/:user', function(req, res){
+  // possible params: by success, by start date - end date
+  return writeResult(res, 200, "TODO")
+})
 
 app.listen(settings.appPort)
 
