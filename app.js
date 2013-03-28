@@ -15,7 +15,7 @@ var schemaObjective = mongoose.Schema({
                         username: String, // used for BNAuth
                         name: String,
                         description: String,
-                        timeType: {type: String, enum: ['continuous', 'fixed']},
+                        timeType: {type: String, enum: ['continuous', 'fixed']}, // TODO: make this Boolean?
                         recordInterval: {
                           years: Number,
                           months: Number,
@@ -67,7 +67,8 @@ Objective.schema.path('tags').validate(function (value) {
 var schemaEntry = mongoose.Schema({
                     application: String, // used for BNAuth
                     username: String, // used for BNAuth
-                    entry_type: String, // success / failure / empty
+                    entryId: String,
+                    success: Boolean, // user records this on given interval
                     comments: String,
                     created_timestamp: { type: Date, default: Date.now }
                   })
