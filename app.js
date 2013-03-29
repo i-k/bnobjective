@@ -37,7 +37,11 @@ var schemaObjective = mongoose.Schema({
                         tags: [String],
                         isActive: Boolean,
                         isPublic: Boolean,
-                        groups: [String] // if not public, then only members of these groups are allowed to see this. TODO: think how this should be done
+                        groups: [String], // if not public, then only members of these groups are allowed to see this. TODO: think how this should be done
+                        entryTitleText: String,
+                        entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa
+                        entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it
+                        entryMaxAmount: Number
                       })
 
 var Objective = mongoose.model('Objective', schemaObjective)
