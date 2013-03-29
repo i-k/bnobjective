@@ -16,7 +16,7 @@ var schemaObjective = mongoose.Schema({
                         username: String, // used for BNAuth
                         name: String,
                         description: String,
-                        timeType: {type: String, enum: ['continuous', 'fixed']}, // TODO: make this Boolean?
+                        expirationDate: Date, // leave null if objective is not meant to expire
                         recordInterval: {
                           years: Number,
                           months: Number,
@@ -25,7 +25,7 @@ var schemaObjective = mongoose.Schema({
                           hours: Number,
                           minutes: Number
                         },
-                        recordWindow: { // offset from interval deadline
+                        recordWindow: { // offset from recordInterval's deadline
                           years: Number,
                           months: Number,
                           weeks: Number,
@@ -37,7 +37,7 @@ var schemaObjective = mongoose.Schema({
                         tags: [String],
                         isActive: Boolean,
                         isPublic: Boolean,
-                        groups: [String] // if not public, then only members of these groups are allowed to see this
+                        groups: [String] // if not public, then only members of these groups are allowed to see this. TODO: think how this should be done
                       })
 
 var Objective = mongoose.model('Objective', schemaObjective)
@@ -73,6 +73,11 @@ var schemaEntry = mongoose.Schema({
                     entryId: String,
                     success: Boolean, // user records this on given interval
                     comments: String,
+// Objective can be numerical, therefore we must be able to record numerical 
+// values for each entry, e.g. how many kilos you lost weight this month,
+// or how many kilometers did you run this week? This value can be used to
+// aggregate user's results or whole group's result
+                    amount: Number,
                     created_timestamp: { type: Date, default: Date.now }
                   })
 
