@@ -164,7 +164,102 @@ app.post('/api/add-objective', function(req, res){
 
 })
 
+app.post('/api/remove-objective', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
 app.post('/api/add-entry', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.post('/api/remove-entry', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.post('/api/update-entry', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.post('/api/add-host', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.post('/api/remove-host', function(req, res){
+  var username = req.body.uid
+  var application = req.body.app
+  var sessionId = req.body.sid
+
+  if (typeof username === 'undefined') 
+    return writeResult(res, 412, "Missing username")
+  else if (typeof application === 'undefined')
+    return writeResult(res, 412, "Missing application name: misconfigured?")
+  else if (typeof sessionId === 'undefined')
+    return writeResult(res, 412, "Missing session key: misconfigured?")
+
+  return writeResult(res, 200, "TODO")
+
+})
+
+app.post('/api/update-host', function(req, res){
   var username = req.body.uid
   var application = req.body.app
   var sessionId = req.body.sid
