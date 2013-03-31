@@ -13,7 +13,7 @@ mongoose.connect(settings.mongoHost)
 
 var schemaObjective = mongoose.Schema({
                         application: String, // used for BNAuth
-                        username: String, // used for BNAuth
+                        username: String, // used for BNAuth. User who created and owns this objective.
                         name: String,
                         description: String,
                         expirationDate: Date, // leave null if objective is not meant to expire
@@ -34,14 +34,24 @@ var schemaObjective = mongoose.Schema({
                           minutes: Number
                         },
                         created_timestamp: { type: Date, default: Date.now },
-                        tags: [String],
+                        tags: [String], // for searching public objectives
                         isActive: Boolean,
                         isPublic: Boolean,
-                        groups: [String], // if not public, then only members of these groups are allowed to see this. TODO: think how this should be done
-                        entryTitleText: String,
-                        entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa
+                        entryTitleText: String, // e.g. Did you succeed today? / How many cigarettes you smoke today?
+                        entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa. If filled with value, input box for value is shown.
+                        entryAmount: Number,
                         entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it
-                        entryMaxAmount: Number
+                        entryMaxAmount: Number,
+// This is used to plug-in different services with BNObjective.
+// Service can allow multiple different users (authenticated by BNAuth) to
+// add entries for given object.
+                        allowedHosts: [{
+                          hostId: String,
+// objective's owner user must set password for linked host. Adding / removing users
+// requires password. Password is a shared secret with the host-service and BNObjective.
+                          password: String,
+                          users: [String] // BNAuth is used to validate user if he/she tries to create entry for objective
+                        }]
                       })
 
 var Objective = mongoose.model('Objective', schemaObjective)
