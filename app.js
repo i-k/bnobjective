@@ -84,7 +84,7 @@ Objective.schema.path('tags').validate(function (value) {
 var schemaEntry = mongoose.Schema({
                     application: String, // used for BNAuth
                     username: String, // used for BNAuth
-                    entryId: String,
+                    objectiveId: String,
                     success: Boolean, // user records this on given interval
                     comments: String,
 // Objective can be numerical, therefore we must be able to record numerical 
