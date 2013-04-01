@@ -1,7 +1,7 @@
 /*
  * BNObjective
  *
- * TODO: route to add objective and entry, testpage for these
+ * TODO next: route to add objective and entry, testpage for these
  */
 
 var express = require('express')
@@ -41,6 +41,8 @@ var schemaObjective = mongoose.Schema({
                         entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa. If filled with value, input box for value is shown.
                         entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it
                         entryMaxAmount: Number,
+                        entrySuccessMinAmount: Number, // if value is between entrySuccessMin- / MaxAmount, then it is considered as success,
+                        entrySuccessMaxAmount: Number, // all other values are considered as failures. No intermediate values are used at this point.
 // This is used to plug-in different services with BNObjective.
 // Service can allow multiple different users (authenticated by BNAuth) to
 // add entries for given object.
