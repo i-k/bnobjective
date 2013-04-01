@@ -34,6 +34,7 @@ var schemaObjective = mongoose.Schema({
                           minutes: Number
                         },
                         created_timestamp: { type: Date, default: Date.now },
+                        changed_timestamp: Date, // set after e.g. changing objective's description
                         tags: [String], // for searching public objectives
                         isActive: Boolean,
                         isPublic: Boolean,
@@ -52,10 +53,26 @@ var schemaObjective = mongoose.Schema({
 // requires password. Password is a shared secret with the host-service and BNObjective.
                           password: String,
                           users: [String] // BNAuth is used to validate user if he/she tries to create entry for objective
-                        }]
+                        }],
+                        awardsAndRanks: {
+                          sequential_success_entries: [{
+                               amount: Number,
+                               awardName: String, // '10 päivää tupakoimatta'
+                               awardDescription: String,
+                               medalLevel: Number,
+                               users: [String] // users who have earned this metal
+                          }],
+                          entry_amount: [{
+                              amount: Number, 
+                              rank: String,
+                              users: [String] // users who have earned this rank
+                          }]
+                        }
                       })
 
 var Objective = mongoose.model('Objective', schemaObjective)
+
+// TODO: add validations for each field
 
 Objective.schema.path('name').validate(function (value) {
   return value.length <= settings.maxTagNameLength
@@ -86,14 +103,18 @@ var schemaEntry = mongoose.Schema({
                     application: String, // used for BNAuth
                     username: String, // used for BNAuth
                     objectiveId: String,
-                    success: Boolean, // user records this on given interval
+// user records this on given interval. If no success is given with entry, the amount -field needs
+// to be filled. Success will then be deduced from entrySuccessMin/MaxAmount -values 
+// that are set in the objective. If these are not set, then an error is returned
+                    success: Boolean,
                     comments: String,
-// Objective can be numerical, therefore we must be able to record numerical 
-// values for each entry, e.g. how many kilos you lost weight this month,
+// Objective can be numerical, therefore BNObjective must be able to record numerical 
+// values for each entry. E.g. how many kilos you lost weight this month,
 // or how many kilometers did you run this week? This value can be used to
 // aggregate user's results or whole group's result
                     amount: Number,
-                    created_timestamp: { type: Date, default: Date.now }
+                    created_timestamp: { type: Date, default: Date.now },
+                    changed_timestamp: Date // entry can be updated within the record-interval
                   })
 
 var Entry = mongoose.model('Entry', schemaEntry)
@@ -154,6 +175,7 @@ app.post('/api/add-objective', function(req, res){
   var username = req.body.uid
   var application = req.body.app
   var sessionId = req.body.sid
+
   if (typeof username === 'undefined') 
     return writeResult(res, 412, "Missing username")
   else if (typeof application === 'undefined')
@@ -161,7 +183,42 @@ app.post('/api/add-objective', function(req, res){
   else if (typeof sessionId === 'undefined')
     return writeResult(res, 412, "Missing session key: misconfigured?")
 
-  return writeResult(res, 200, "TODO")
+  var objectiveName = req.body.name
+  var objectiveDescription = req.body.description
+  var objectiveExpirationDate = req.body.expirationDate
+  var objectiveRecordInterval = req.body.recordInterval
+  var objectiveRecordWindow = req.body.recordWindow
+  var objectiveTags = req.body.tags
+  var objectiveIsPublic = req.body.isPublic
+  var objectiveEntryTitleText = req.body.entryTitleText
+  var objectiveEntryUnitOfMeasure = req.body.entryUnitOfMeasure
+  var objectiveEntryMinAmount = req.body.entryMinAmount
+  var objectiveEntryMaxAmount = req.body.entryMaxAmount
+  var objectiveEntrySuccessMinAmount = req.body.entrySuccessMinAmount
+  var objectiveEntrySuccessMaxAmount = req.body.entrySuccessMaxAmount
+  var objectiveAllowedHosts = req.body.allowedHosts
+
+  validateUser(username, application, sessionId, function(result){
+    if (result.result.message === 'validated'){
+      console.log("Validated")
+	  var newObjective = new Objective({ application: application,
+                                username: username,
+                                entry: entry,
+                                created_timestamp: new Date(),
+                                tags: tags,
+                                done: false })
+
+      newObjective.save(function(err){
+        if (err){
+          console.log('An error occured')
+          return writeResult(res, 500, "Error: " + err)
+        } else
+          return writeResult(res, 201, "Objective created", newObjective)
+      })
+	  
+    } else
+      return writeResult(res, result.result.status, result.result.message)
+  })
 
 })
 
