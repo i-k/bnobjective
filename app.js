@@ -39,7 +39,6 @@ var schemaObjective = mongoose.Schema({
                         isPublic: Boolean,
                         entryTitleText: String, // e.g. Did you succeed today? / How many cigarettes you smoke today?
                         entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa. If filled with value, input box for value is shown.
-                        entryAmount: Number,
                         entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it
                         entryMaxAmount: Number,
 // This is used to plug-in different services with BNObjective.
