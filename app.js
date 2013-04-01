@@ -59,7 +59,7 @@ var schemaObjective = mongoose.Schema({
                                amount: Number,
                                awardName: String, // '10 päivää tupakoimatta'
                                awardDescription: String,
-                               medalLevel: Number,
+                               medalLevel: Number, // 1-10, preset medals
                                users: [String] // users who have earned this metal
                           }],
                           entry_amount: [{
@@ -197,16 +197,29 @@ app.post('/api/add-objective', function(req, res){
   var objectiveEntrySuccessMinAmount = req.body.entrySuccessMinAmount
   var objectiveEntrySuccessMaxAmount = req.body.entrySuccessMaxAmount
   var objectiveAllowedHosts = req.body.allowedHosts
+  var objectiveAwardsAndRanks = req.body.awardsAndRanks
 
   validateUser(username, application, sessionId, function(result){
     if (result.result.message === 'validated'){
       console.log("Validated")
 	  var newObjective = new Objective({ application: application,
-                                username: username,
-                                entry: entry,
-                                created_timestamp: new Date(),
-                                tags: tags,
-                                done: false })
+                                         username: username,
+                                         name: objectiveName,
+                                         description: objectiveDescription,
+                                         expirationDate: objectiveExpirationDate,
+                                         recordInterval: objectiveRecordInterval,
+                                         recordWindow: objectiveRecordWindow,
+                                         tags: objectiveTags,
+                                         isPublic: objectiveIsPublic,
+                                         entryTitleText: objectiveEntryTitleText,
+                                         entryUnitOfMeasure: objectiveEntryUnitOfMeasure,
+                                         entryMinAmount: objectiveEntryMinAmount,
+                                         entryMaxAmount: objectiveEntryMaxAmount,
+                                         entrySuccessMinAmount: objectiveEntrySuccessMinAmount,
+                                         entrySuccessMaxAmount: objectiveEntrySuccessMaxAmount,
+                                         allowedHosts: objectiveAllowedHosts,
+                                         awardsAndRanks: objectiveAwardsAndRanks
+                         })
 
       newObjective.save(function(err){
         if (err){
