@@ -43,28 +43,28 @@ var schemaObjective = mongoose.Schema({
                         entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it
                         entryMaxAmount: Number,
                         entrySuccessMinAmount: Number, // if value is between entrySuccessMin- / MaxAmount, then it is considered as success,
-                        entrySuccessMaxAmount: Number, // all other values are considered as failures. No intermediate values are used at this point.
+                        entrySuccessMaxAmount: Number, // all other values are considered as failures. No intermediate values (partial success) are used at this point.
 // This is used to plug-in different services with BNObjective.
 // Service can allow multiple different users (authenticated by BNAuth) to
-// add entries for given object.
+// add entries for given object. Objective itself cannot be changed by users allowed.
                         allowedHosts: [{
                           hostId: String,
 // objective's owner user must set password for linked host. Adding / removing users
 // requires password. Password is a shared secret with the host-service and BNObjective.
-                          password: String,
+                          password: String, // Sha256 hashed!
                           users: [String] // BNAuth is used to validate user if he/she tries to create entry for objective
                         }],
                         awardsAndRanks: {
                           sequential_success_entries: [{
-                               amount: Number,
+                               amount: Number, // e.g. 10 sequential entries
                                awardName: String, // '10 päivää tupakoimatta'
                                awardDescription: String,
                                medalLevel: Number, // 1-10, preset medals
                                users: [String] // users who have earned this metal
                           }],
                           entry_amount: [{
-                              amount: Number, 
-                              rank: String,
+                              amount: Number, // e.g. 100 entries
+                              rank: String, // e.g. 'veteraani'
                               users: [String] // users who have earned this rank
                           }]
                         }
@@ -75,12 +75,78 @@ var Objective = mongoose.model('Objective', schemaObjective)
 // TODO: add validations for each field
 
 Objective.schema.path('name').validate(function (value) {
-  return value.length <= settings.maxTagNameLength
-}, 'Name too long for objective. Max ' + settings.maxTagNameLength + ' characters.')
+  return value.length <= settings.maxObjectiveNameLength
+}, 'Name too long for objective. Max ' + settings.maxObjectiveNameLength + ' characters.')
 
-Objective.schema.path('name').validate(function (value) {
-  return value.length <= settings.maxTagDescriptionLength
-}, 'Description too long for objective. Max ' + settings.maxTagDescriptionLength + ' characters.')
+Objective.schema.path('description').validate(function (value) {
+  return value.length <= settings.maxObjectiveDescriptionLength
+}, 'Description too long for objective. Max ' + settings.maxObjectiveDescriptionLength + ' characters.')
+
+Objective.schema.path('recordInterval.years').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+
+  var years = parseInt(value)
+  if ( isNaN(years) === true || years > 2)
+    return false
+  else
+    return true
+}, 'Record interval has missing or invalid years-value.')
+
+Objective.schema.path('recordInterval.months').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+
+  var months = parseInt(value)
+  if ( isNaN(months) === true || months > 12)
+    return false
+  else
+    return true
+}, 'Record interval has missing or invalid months-value.')
+
+Objective.schema.path('recordInterval.weeks').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+
+  var weeks = parseInt(value)
+  if ( isNaN(weeks) === true || weeks > 4)
+    return false
+  else
+    return true
+}, 'Record interval has missing or invalid weeks-value.')
+
+Objective.schema.path('recordInterval.days').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+
+  var days = parseInt(value)
+  if ( isNaN(days) === true || days > 31)
+    return false
+  else
+    return true
+}, 'Record interval has missing or invalid days-value.')
+
+Objective.schema.path('recordInterval.hours').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+
+  var hours = parseInt(value)
+  if ( isNaN(hours) === true || hours > 24)
+    return false
+  else
+    return true
+}, 'Record interval has missing or invalid hours-value.')
+
+Objective.schema.path('recordInterval.minutes').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+
+  var minutes = parseInt(value)
+  if ( isNaN(minutes) === true || minutes > 12)
+    return false
+  else
+    return true
+}, 'Record interval has missing or invalid minutes-value.')
 
 Objective.schema.path('tags').validate(function (value) {
   return value instanceof Array
