@@ -1,0 +1,25 @@
+<div id="item-template" type="text/x-handlebars-template">
+
+  <table id="item-table">
+    <thead>
+       <th>Field1</th>
+       <th>Actions</th>
+    </thead>
+    <tbody id="item-table-data">
+      {{#each item}}
+        <tr id={{this.id}}>
+          <td>{{this.field_1}}</td>
+          <td id={{this.id}}_actions>
+            {{#if _links}}
+              <div class="btn-group">
+              {{#each _links}}
+                <a class="btn btn-small" href='{{this.href}}'">{{this.title}}</a>
+              {{/each}}
+              </div>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

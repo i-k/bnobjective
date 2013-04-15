@@ -1,0 +1,60 @@
+<div id="item-template" type="text/x-handlebars-template">
+
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="#">Kimppatsemppari</a>
+          <ul class="nav">
+            {{#if this.user}}
+            <!--  -->
+            <li class="dropdown" id="objectives">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Tavoitteet
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="./#objective/search">Etsi</a></li>
+                <li><a href="./#objective/my-objectives">Omat tavoitteet</a></li>
+              </ul>
+            </li>
+            <!-- RYHMÄT -->
+            <li class="dropdown" id="groups">              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Ryhmät
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="./#groups/search">Etsi ryhmiä</a></li>
+                <li><a href="./#groups/my-groups">Omat ryhmäni</a></li>
+              </ul>
+            </li>
+            <!-- PALKINNOT -->
+            <li class="dropdown" id="awards">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Palkinnot
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="./#awards/my-awards"><b id="price-changes-badge"></b> Omat palkinnot</a></li>
+              </ul>
+            </li>
+            {{/if}}
+            
+            {{#unless this.user}}
+            <li class="navbar-form pull-right">
+              <input id="username" type="text" class="span2" placeholder="Käyttäjänimi">
+              <input id="password" type="password" class="span2" placeholder="Salasana">
+              <button id="login" class="btn" type="submit">Kirjaudu</button>
+            </li>
+            {{/unless}}
+
+            {{#if this.user}}
+              <li class="navbar-form pull-right">
+              <button id="logout" class="btn" type="submit">Kirjaudu ulos</button>
+            </li>
+            {{/if}}
+
+          </ul>
+        </div>
+      </div>
+
+</div>
