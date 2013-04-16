@@ -6,11 +6,13 @@ define([
   'view/objectiveDetailsView',
   'view/menuView',
   'view/frontpageView',
+  'view/registerView',
   'model/item',
   'collection/itemCollection',
 ],
 
-  function($, _, Backbone, ObjectivesView, ObjectiveDetailsView, MenuView, FrontpageView,
+  function($, _, Backbone, ObjectivesView, ObjectiveDetailsView, MenuView,
+           FrontpageView, RegisterView,
            Item, ItemCollection){
 
   var AppRouter = Backbone.Router.extend({
@@ -19,6 +21,7 @@ define([
       '': 'render',
       'objectives/:identifier': 'renderObjectiveByIdentifier',
       'objectives/': 'render',
+      'register': 'renderRegister',
       '*actions': 'render' // Default
     },
 
@@ -76,6 +79,15 @@ define([
       var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection, identifier: identifier})
       objectiveDetailsView.render()
       window.views.push(objectiveDetailsView)
+    },
+
+    renderRegister: function(){
+      this.closeViews()
+      console.log('Route: register')
+      $('#page-description').html('Liity jäseneksi')
+      var registerView = new RegisterView()
+      registerView.render()
+      window.views.push(registerView)
     },
 
     // view must implement the close()-method which unbinds it from any subscribed events

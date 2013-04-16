@@ -24,7 +24,7 @@ define(['./../js/settings.js',
     render: function(event){
       var self = this
       // Take care that no listener is bound twice:
-      $('#main *').off("click.common")
+      $('#main *').off("click.menu")
       
       console.log('Rendering...' + event)
       var $el = this.$el
@@ -41,10 +41,10 @@ define(['./../js/settings.js',
     },
     
     bindLogin: function(model){
-      $('#login').on('click.common', function(){
+      $('#login-menu').on('click.menu', function(){
 
-        var password = $('#password').val()
-          , username = $('#username').val()
+        var password = $('#password-menu').val()
+          , username = $('#username-menu').val()
 
          $.ajax({
           type: "POST",
@@ -88,7 +88,7 @@ define(['./../js/settings.js',
     }, // end bindLogin
 
     bindLogout: function(model){
-      $('#logout').on('click.common', function(){
+      $('#logout-menu').on('click.menu', function(){
 
         var username = model.get('user')
           , sessionId = model.get('auth_token')

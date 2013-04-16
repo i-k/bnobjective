@@ -2,10 +2,10 @@ define(['./../js/settings.js',
         'lib/handlebars', 
         'lib/backbone',
         'lib/jquery',
-        'lib/text!../../template/frontpageTemplate.hbs'],
+        'lib/text!../../template/registerTemplate.hbs'],
        function (Settings, Handlebars, Backbone, $, ItemTemplateSource) {
 
-  var frontpageView = Backbone.View.extend({
+  var registerView = Backbone.View.extend({
     el: $('#items'),
 
     initialize: function(){
@@ -35,7 +35,30 @@ define(['./../js/settings.js',
       $el.html(this.itemTemplate())
 
       $('#register').on('click.common', function(){
-        Backbone.history.navigate('#/register')
+
+        var username = $('#username').val()
+          , email = $('#email').val()
+          , password = $('#password').val()
+          , hashedPassword = sha256_digest(password)
+
+        $.ajax({
+          type: "POST",
+          url: Settings.bnauth.registerUrl,
+          data: {
+            username: username,
+            appName: Settings.bnauth.appName,
+            email: email,
+            password: hashedPassword
+          },
+          success: function(result){
+            console.log(result);
+            // TODO: log user in?
+            password = "";
+            hashedPassword = "";
+            // model.set({user: username, auth_token: result.result.data.access_token})
+          },
+          dataType: 'json'
+        })
       })
 
       return this
@@ -43,6 +66,6 @@ define(['./../js/settings.js',
 
   })
   
-  return frontpageView
+  return registerView
 
 })

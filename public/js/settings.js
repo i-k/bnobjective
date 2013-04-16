@@ -10,6 +10,7 @@ define(function(){
     this.bnauth.loginTokenUrl = 'http://bnauth.artiee.c9.io:80/api/login_token',
     this.bnauth.loginUrl = 'http://bnauth.artiee.c9.io:80/api/login',
     this.bnauth.logoutUrl = 'http://bnauth.artiee.c9.io:80/api/logout',
+    this.bnauth.registerUrl = 'http://bnauth.artiee.c9.io:80/api/register',
     this.bnobjective.addObjective = 'http://bnobjective.artiee.c9.io:80/api/add-objective',
     this.bnobjective.objectives = 'http://bnobjective.artiee.c9.io:80/api/objectives'
   }
