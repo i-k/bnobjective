@@ -20,7 +20,7 @@ define([
     routes: {
       '': 'render',
       'objectives/:identifier': 'renderObjectiveByIdentifier',
-      'objectives/': 'render',
+      'objectives': 'render',
       'register': 'renderRegister',
       '*actions': 'render' // Default
     },
@@ -50,6 +50,8 @@ define([
       window.views.push(menuView)
     },
 
+    // if user is logged in, render list of objectives,
+    // otherwise render frontpage.
     render: function(actions){
       this.closeViews()
       console.log('(Default) Route:', actions)
@@ -62,6 +64,7 @@ define([
           var objectivesView = new ObjectivesView({collection: this.itemCollection})
           objectivesView.render()
           window.views.push(objectivesView)
+          $('#page-description').html('Tavoitteet')
         } else {
           var frontpageView = new FrontpageView()
           frontpageView.render()

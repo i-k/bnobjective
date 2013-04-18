@@ -72,6 +72,7 @@ define(['./../js/settings.js',
                   password = "";
                   hashedPassword = "";
                   model.set({user: username, auth_token: result.result.data.access_token})
+                  Backbone.history.navigate('#/objectives', {trigger: true})
                 },
                 dataType: 'json'
               })
@@ -106,7 +107,7 @@ define(['./../js/settings.js',
             console.log(result)
             if(result.result.status == 200){
               model.set({user: null, auth_token: null})
-              Backbone.history.navigate('/') // go to frontpage after logging out!
+              Backbone.history.navigate('/', {trigger: true}) // go to frontpage after logging out!
             } else {
               console.log("Couldn't logout! " + result.result.status)
             }

@@ -1,25 +1,48 @@
 <div id="item-template" type="text/x-handlebars-template">
 
-  <table id="item-table">
-    <thead>
-       <th>Field1</th>
-       <th>Actions</th>
-    </thead>
-    <tbody id="item-table-data">
-      {{#each item}}
-        <tr id={{this.id}}>
-          <td>{{this.field_1}}</td>
-          <td id={{this.id}}_actions>
-            {{#if _links}}
-              <div class="btn-group">
-              {{#each _links}}
-                <a class="btn btn-small" href='{{this.href}}'">{{this.title}}</a>
-              {{/each}}
-              </div>
-            {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="row">
+  
+      <div class="span4 well" style="background-colour: ">
+        <p>Tavoitteet ovat Kimppatsempparin ydin.</p>
+      </div>
+  
+      <div class="span8 well">
+      
+        <a class="btn btn-large btn-primary" style="margin-bottom: 3%;"><i class="icon-plus icon-white"></i> Uusi tavoite</a>
+        <br />
+      
+        <div class="row">
+
+         <div class="span3 well">
+            <strong>Nimi: {{this.name}}</strong>
+            Kuvaus: {{this.description}}
+            Päättyy: {{this.expirationDate}}
+            Tagit: {{this.tags}}
+            Julkinen: {{this.isPublic}}
+            Luotu: {{this.createdTimestamp}}
+         </div>
+         <div class="span3 well">
+           <strong>Nimi: {{this.name}}</strong>
+            Kuvaus: {{this.description}}
+            Päättyy: {{this.expirationDate}}
+            Tagit: {{this.tags}}
+            Julkinen: {{this.isPublic}}
+            Luotu: {{this.createdTimestamp}}
+          </div>
+
+        </div>
+      </div>  
+  
+    {{#each item}}
+      <div class="span4">
+        <strong>Nimi: {{this.name}}</strong>
+        Kuvaus: {{this.description}}
+        Päättyy: {{this.expirationDate}}
+        Tagit: {{this.tags}}
+        Julkinen: {{this.isPublic}}
+        Luotu: {{this.createdTimestamp}}
+      </div>
+    {{/each}}
+  </div>
+
 </div>

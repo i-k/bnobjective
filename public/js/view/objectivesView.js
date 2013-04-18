@@ -2,7 +2,7 @@ define(['./../js/settings.js',
         'lib/handlebars', 
         'lib/backbone',
         'lib/jquery',
-        'lib/text!../../template/protoTemplate.hbs',
+        'lib/text!../../template/objectivesTemplate.hbs',
         'lib/jquery.fixheadertable'],
        function (Settings, Handlebars, Backbone, $, ItemTemplateSource) {
 
@@ -40,17 +40,8 @@ define(['./../js/settings.js',
       var items = { "item": this.collection.toJSON() }
       console.log(items)
       $el.html(this.itemTemplate(items))
-      $("#item-table-data > tr:even").addClass("even") // alter row colors
-      $("#item-table-data > tr:odd").addClass("odd")
 
       var rows = this.collection.toJSON()
-
-      /*
-      $('#item-table').fixheadertable({
-        caption: 'Objectives',
-        height: 800,
-        minWidth: 1200
-      }) */
 
       return this
     }

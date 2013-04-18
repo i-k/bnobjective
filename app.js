@@ -33,8 +33,8 @@ var schemaObjective = mongoose.Schema({
                           hours: Number,
                           minutes: Number
                         },
-                        created_timestamp: { type: Date, default: Date.now },
-                        changed_timestamp: Date, // set after e.g. changing objective's description
+                        createdTimestamp: { type: Date, default: Date.now },
+                        changedTimestamp: Date, // set after e.g. changing objective's description
                         tags: [String], // for searching public objectives
                         isActive: Boolean,
                         isPublic: Boolean,
@@ -55,14 +55,14 @@ var schemaObjective = mongoose.Schema({
                           users: [String] // BNAuth is used to validate user if he/she tries to create entry for objective
                         }],
                         awardsAndRanks: {
-                          sequential_success_entries: [{
+                          sequentialSuccessEntries: [{
                                amount: Number, // e.g. 10 sequential entries
                                awardName: String, // '10 päivää tupakoimatta'
                                awardDescription: String,
                                medalLevel: Number, // 1-10, preset medals
                                users: [String] // users who have earned this metal
                           }],
-                          entry_amount: [{
+                          entryAmount: [{
                               amount: Number, // e.g. 100 entries
                               rank: String, // e.g. 'veteraani'
                               users: [String] // users who have earned this rank
@@ -179,8 +179,8 @@ var schemaEntry = mongoose.Schema({
 // or how many kilometers did you run this week? This value can be used to
 // aggregate user's results or whole group's result
                     amount: Number,
-                    created_timestamp: { type: Date, default: Date.now },
-                    changed_timestamp: Date // entry can be updated within the record-interval
+                    createdTimestamp: { type: Date, default: Date.now },
+                    changedTimestamp: Date // entry can be updated within the record-interval
                   })
 
 var Entry = mongoose.model('Entry', schemaEntry)
@@ -284,7 +284,9 @@ app.post('/api/add-objective', function(req, res){
                                          entrySuccessMinAmount: objectiveEntrySuccessMinAmount,
                                          entrySuccessMaxAmount: objectiveEntrySuccessMaxAmount,
                                          allowedHosts: objectiveAllowedHosts,
-                                         awardsAndRanks: objectiveAwardsAndRanks
+                                         awardsAndRanks: objectiveAwardsAndRanks,
+                                         createdTimestamp: new Date(),
+                                         changedTimestamp: new Date()
                          })
 
       newObjective.save(function(err){
