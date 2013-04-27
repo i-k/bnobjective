@@ -2,6 +2,8 @@
  * BNObjective
  *
  * TODO next: route to add objective and entry, testpage for these
+ *   => min lengths for fields for objective
+ *   => check that validations actually work
  */
 
 var express = require('express')
@@ -39,8 +41,8 @@ var schemaObjective = mongoose.Schema({
                         isActive: Boolean,
                         isPublic: Boolean,
                         entryTitleText: String, // e.g. Did you succeed today? / How many cigarettes you smoke today?
-                        entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa. If filled with value, input box for value is shown.
-                        entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it
+                        entryUnitOfMeasure: String, // e.g. Kg, Kpl, kertaa. If filled with value, input box for value is shown! Otherwise it is just yes/no -option.
+                        entryMinAmount: Number, // if entry's amount-field is used, this defines the min value for it.
                         entryMaxAmount: Number,
                         entrySuccessMinAmount: Number, // if value is between entrySuccessMin- / MaxAmount, then it is considered as success,
                         entrySuccessMaxAmount: Number, // all other values are considered as failures. No intermediate values (partial success) are used at this point.
@@ -73,7 +75,7 @@ var schemaObjective = mongoose.Schema({
 var Objective = mongoose.model('Objective', schemaObjective)
 
 // TODO: add validations for each field
-
+// TODO: min lengths for fields also!
 Objective.schema.path('name').validate(function (value) {
   return value.length <= settings.maxObjectiveNameLength
 }, 'Name too long for objective. Max ' + settings.maxObjectiveNameLength + ' characters.')
@@ -221,7 +223,7 @@ function validateUser(username, application, sessionId, callback){
   console.log('Validating user ' + username)
   request.post({url: settings.bnAuthUrl,
                 json: {username: username, 
-                       application: application, 
+                       appName: application, 
                        session_id: sessionId}
                }, function (err, resp, body) {
     if (!err && resp.statusCode === 200) {
@@ -239,8 +241,8 @@ function validateUser(username, application, sessionId, callback){
 
 app.post('/api/add-objective', function(req, res){
   var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
+    , application = req.body.app
+    , sessionId = req.body.sid
 
   if (typeof username === 'undefined') 
     return writeResult(res, 412, "Missing username")
@@ -250,20 +252,51 @@ app.post('/api/add-objective', function(req, res){
     return writeResult(res, 412, "Missing session key: misconfigured?")
 
   var objectiveName = req.body.name
-  var objectiveDescription = req.body.description
-  var objectiveExpirationDate = req.body.expirationDate
-  var objectiveRecordInterval = req.body.recordInterval
-  var objectiveRecordWindow = req.body.recordWindow
-  var objectiveTags = req.body.tags
-  var objectiveIsPublic = req.body.isPublic
-  var objectiveEntryTitleText = req.body.entryTitleText
-  var objectiveEntryUnitOfMeasure = req.body.entryUnitOfMeasure
-  var objectiveEntryMinAmount = req.body.entryMinAmount
-  var objectiveEntryMaxAmount = req.body.entryMaxAmount
-  var objectiveEntrySuccessMinAmount = req.body.entrySuccessMinAmount
-  var objectiveEntrySuccessMaxAmount = req.body.entrySuccessMaxAmount
-  var objectiveAllowedHosts = req.body.allowedHosts
-  var objectiveAwardsAndRanks = req.body.awardsAndRanks
+    , objectiveDescription = req.body.description
+    , objectiveExpirationDate = req.body.expirationDate
+    , objectiveRecordInterval = req.body.recordInterval
+    , objectiveRecordWindow = req.body.recordWindow
+    , objectiveTags = req.body.tags
+    , objectiveIsPublic = req.body.isPublic
+    , objectiveEntryTitleText = req.body.entryTitleText
+    , objectiveEntryUnitOfMeasure = req.body.entryUnitOfMeasure
+    , objectiveEntryMinAmount = req.body.entryMinAmount
+    , objectiveEntryMaxAmount = req.body.entryMaxAmount
+    , objectiveEntrySuccessMinAmount = req.body.entrySuccessMinAmount
+    , objectiveEntrySuccessMaxAmount = req.body.entrySuccessMaxAmount
+//    , objectiveAllowedHosts = req.body.allowedHosts
+//    , objectiveAwardsAndRanks = req.body.awardsAndRanks
+
+  if (typeof objectiveName === 'undefined')
+    return writeResult(res, 412, "Missing objective name")
+  else if (typeof objectiveDescription === 'undefined')
+    return writeResult(res, 412, "Missing objective description")
+  else if (typeof objectiveExpirationDate === 'undefined')
+    return writeResult(res, 412, "Missing objective expiration date")
+  else if (typeof objectiveRecordInterval === 'undefined')
+    return writeResult(res, 412, "Missing objective record interval")
+  else if (typeof objectiveRecordWindow === 'undefined')
+    return writeResult(res, 412, "Missing objective record window")
+  else if (typeof objectiveTags === 'undefined')
+    return writeResult(res, 412, "Missing objective tags")
+  else if (typeof objectiveIsPublic === 'undefined')
+    return writeResult(res, 412, "Missing objective is public")
+  else if (typeof objectiveEntryTitleText === 'undefined')
+    return writeResult(res, 412, "Missing objective entry title text")
+  else if (typeof objectiveEntryUnitOfMeasure === 'undefined')
+    return writeResult(res, 412, "Missing objective entry unit of measure")
+  else if (typeof objectiveEntryMinAmount === 'undefined')
+    return writeResult(res, 412, "Missing objective entry min amount")
+  else if (typeof objectiveEntryMaxAmount === 'undefined')
+    return writeResult(res, 412, "Missing objective entry max amount")
+  else if (typeof objectiveEntrySuccessMinAmount === 'undefined')
+    return writeResult(res, 412, "Missing objective entry success min amount")
+  else if (typeof objectiveEntrySuccessMaxAmount === 'undefined')
+    return writeResult(res, 412, "Missing objective entry success max amount")
+
+
+console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + objectiveName + 
+            ', ' + objectiveDescription + ', ' + objectiveExpirationDate)
 
   validateUser(username, application, sessionId, function(result){
     if (result.result.message === 'validated'){
@@ -283,8 +316,8 @@ app.post('/api/add-objective', function(req, res){
                                          entryMaxAmount: objectiveEntryMaxAmount,
                                          entrySuccessMinAmount: objectiveEntrySuccessMinAmount,
                                          entrySuccessMaxAmount: objectiveEntrySuccessMaxAmount,
-                                         allowedHosts: objectiveAllowedHosts,
-                                         awardsAndRanks: objectiveAwardsAndRanks,
+                                         allowedHosts: [],
+                                         awardsAndRanks: {},
                                          createdTimestamp: new Date(),
                                          changedTimestamp: new Date()
                          })

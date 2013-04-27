@@ -99,7 +99,7 @@ define(['./../js/settings.js',
           url: Settings.bnauth.logoutUrl,
           data: {
             username: username,
-            application: Settings.bnauth.appName, // TODO: check from bnauth the inconsistency between naming: appName and application !
+            appName: Settings.bnauth.appName,
             session_id: sessionId
             
           },

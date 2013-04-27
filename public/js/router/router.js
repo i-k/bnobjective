@@ -4,6 +4,7 @@ define([
   'lib/backbone',
   'view/objectivesView',
   'view/objectiveDetailsView',
+  'view/newObjectiveView',
   'view/menuView',
   'view/frontpageView',
   'view/registerView',
@@ -11,9 +12,8 @@ define([
   'collection/itemCollection',
 ],
 
-  function($, _, Backbone, ObjectivesView, ObjectiveDetailsView, MenuView,
-           FrontpageView, RegisterView,
-           Item, ItemCollection){
+  function($, _, Backbone, ObjectivesView, ObjectiveDetailsView, NewObjectiveView,
+           MenuView, FrontpageView, RegisterView, Item, ItemCollection){
 
   var AppRouter = Backbone.Router.extend({
 
@@ -21,6 +21,7 @@ define([
       '': 'render',
       'objectives/:identifier': 'renderObjectiveByIdentifier',
       'objectives': 'render',
+      'new-objective': 'renderNewObjective',
       'register': 'renderRegister',
       '*actions': 'render' // Default
     },
@@ -82,6 +83,15 @@ define([
       var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection, identifier: identifier})
       objectiveDetailsView.render()
       window.views.push(objectiveDetailsView)
+    },
+
+    renderNewObjective: function(){
+      this.closeViews()
+      console.log('Route: new-objective')
+      $('#page-description').html('Uusi tavoite')
+      var newObjectiveView = new NewObjectiveView({sessionModel: session})
+      newObjectiveView.render()
+      window.views.push(newObjectiveView)
     },
 
     renderRegister: function(){
