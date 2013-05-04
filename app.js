@@ -311,7 +311,7 @@ app.post('/api/objective', function(req, res){
     return writeResult(res, 412, "Missing objective entry success max amount")
 
 
-console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + objectiveName + 
+console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ', ' + objectiveName + 
             ', ' + objectiveDescription + ', ' + objectiveExpirationDate)
 
   validateUser(username, application, sessionId, function(result){
@@ -320,7 +320,7 @@ console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + 
       
       // TODO: find existing objective:
       Objective.findOne({_id: id, username: username, application: application}, function(err, foundObjective){
-        if (!foundObjective){
+        if (foundObjective){
           // update existing
           foundObjective.application = application,
           foundObjective.username = username,
@@ -351,7 +351,7 @@ console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + 
           
         } else {
           // create new
-      var newObjective = new Objective({ application: application,
+            var newObjective = new Objective({ application: application,
                                          username: username,
                                          name: objectiveName,
                                          description: objectiveDescription,
@@ -372,13 +372,13 @@ console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + 
                                          changedTimestamp: new Date()
                          })
 
-      newObjective.save(function(err){
-        if (err){
-          console.log('An error occured')
-          return writeResult(res, 500, "Error: " + err)
-        } else
-          return writeResult(res, 201, "Objective created", newObjective)
-      })
+            newObjective.save(function(err){
+              if (err){
+                console.log('An error occured')
+                return writeResult(res, 500, "Error: " + err)
+              } else
+                return writeResult(res, 201, "Objective created", newObjective)
+            })
 
         }
       })

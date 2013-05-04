@@ -93,15 +93,21 @@ define([
     // new or update
     renderNewObjective: function(id){
       this.closeViews()
-      console.log('Route: new-objective')
+      console.log('Route: new-objective. Id: ' + id)
       $('#page-description').html('Uusi tavoite')
 
-      if (id !== null) {
+      if (typeof id !== 'undefined' && id !== null) {
+        this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
+        this.itemCollection.setId(id)
+        this.itemCollection.fetch()
+        $('#page-description').html('Muokkaa tavoitetta')
+      } else {
         this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
         this.itemCollection.setId(id)
         this.itemCollection.fetch()
       }
-
+      console.log('RENDER:')
+      console.log(this.itemCollection)
       var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: session})
       newObjectiveView.render()
       window.views.push(newObjectiveView)

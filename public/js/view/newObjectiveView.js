@@ -61,7 +61,7 @@ define(['./../js/settings.js',
            , isPublic = $('#isPublic').val()
            , id = null
 
-         var itemsTmp = this.collection.toJSON()
+         var itemsTmp = self.collection.toJSON()
          // if updating existing objective, get the id (else send null, which creates a new objective):
          if (itemsTmp.length > 0)
            id = itemsTmp[0]._id
@@ -102,12 +102,18 @@ define(['./../js/settings.js',
           },
           success: function(result){
             console.log(result)
-            if(result.result.status == 200){
+            if(result.result.status >= 200 && result.result.status < 300){
               console.log(result)
-              $('#messages').html('Tallennettu')
-            } else {
+              $('#messages').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Tallennettu</div>')
+              window.scrollTo(0,0)
+              Backbone.history.navigate('#/objectives', {trigger: true})
+            } else if(result.result.status >= 300 && result.result.status < 500){
               console.log("Couldn't save! " + result)
-              $('#messages').html('Tallennus epäonnistui!')
+              $('#messages').html('<div class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button> Tallennus epäonnistui! ' + result.result.message + '</div>')
+              window.scrollTo(0,0)
+            } else {
+              $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button> Tallennus epäonnistui! ' + result.result.message + '</div>')
+              window.scrollTo(0,0)
             }
           },
           dataType: 'json'

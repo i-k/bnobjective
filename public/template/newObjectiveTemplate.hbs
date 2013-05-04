@@ -60,12 +60,8 @@
 
          <div class="span4 well">
             <fieldset>
-              <legend>Uuden tavoitteet tiedot</legend>
-              <label>Nimi</label><input id="name" type="text">
-                {{#if this.name}}
-                  {{this.name}}
-                {{/if}}
-              </input><br />
+              <legend>Tavoitteet tiedot</legend>
+              <label>Nimi</label><input id="name" type="text" value="{{#if this.name}}{{this.name}}{{/if}}"></input><br />
               <label>Kuvaus</label><textarea id="description" rows=3>{{#if this.description}}{{this.description}}{{/if}}</textarea><br />
               <label>Päättyy</label><input id="expirationDate" type="date" value="{{#if this.expirationDate}}{{this.expirationDate}}{{/if}}"></input> <br />
               
@@ -273,20 +269,20 @@
               </div>
 
               <label>Kirjauksen otsikko</label><input id="entryTitleText" type="text" placeholder="Onnistuitko tavoitteessa?" value="{{#if this.entryTitleText}}{{this.entryTitleText}}{{/if}}"></input><br />
-              <label>Kirjausyksikkö</label><input id="entryUnitOfMeasure" type="text" placeholder="Jätä tyhjäksi ei tallenneta määriä" value="{{#if this.entryUnitOfMeasure}}{{this.entryUnitOfMeasure}}{{/if}}"></input><br />
-              <label>Minimimäärä kirjausyksikölle</label><input id="entryMinAmount" type="number" value="{{#if this.entryMinAmount}}{{this.entryMinAmount}}{{/if}}"></input><br />
-              <label>Maksimimäärä kirjausyksikölle</label><input id="entryMaxAmount" type="number" value="{{#if this.entryMaxAmount}}{{this.entryMaxAmount}}{{/if}}"></input><br />
-              <label>Onnistumisen minimimäärä kirjausyksikölle</label><input id="entrySuccessMinAmount" type="number" value="{{#if this.entrySuccessMinAmount}}{{this.entrySuccessMinAmount}}{{/if}}"></input><br />
-              <label>Onnistumisen maksimimäärä kirjausyksikölle</label><input id="entrySuccessMaxAmount" type="number" value="{{#if this.entrySuccessMaxAmount}}{{this.entrySuccessMaxAmount}}{{/if}}"></input><br />
+              <label>Kirjausyksikkö</label><input id="entryUnitOfMeasure" type="text" placeholder="Jos tyhjä, niin ei tallenneta määriä" value="{{#if this.entryUnitOfMeasure}}{{this.entryUnitOfMeasure}}{{/if}}"></input><br />
+              <label>Minimimäärä kirjausyksikölle</label><input id="entryMinAmount" class="input-small" type="number" value="{{#if this.entryMinAmount}}{{this.entryMinAmount}}{{/if}}"></input><br />
+              <label>Maksimimäärä kirjausyksikölle</label><input id="entryMaxAmount" class="input-small" type="number" value="{{#if this.entryMaxAmount}}{{this.entryMaxAmount}}{{/if}}"></input><br />
+              <label>Onnistumisen minimimäärä kirjausyksikölle</label><input id="entrySuccessMinAmount" class="input-small" type="number" value="{{#if this.entrySuccessMinAmount}}{{this.entrySuccessMinAmount}}{{/if}}"></input><br />
+              <label>Onnistumisen maksimimäärä kirjausyksikölle</label><input id="entrySuccessMaxAmount" class="input-small" type="number" value="{{#if this.entrySuccessMaxAmount}}{{this.entrySuccessMaxAmount}}{{/if}}"></input><br />
 
               <label>Tagit</label><input id="tags" type="text" value="{{#if this.tags}}{{this.tags}}{{/if}}"></input> <br />
               <label class="checkbox">
-                <input id="isPublic" type="checkbox" value="" value="{{#if this.isPublic}}checked{{/if}}">
+                <input id="isPublic" type="checkbox" {{#if this.isPublic}}checked{{/if}}>
                 Tavoite muiden nähtävissä?
               </label>
             </fieldset>
             
-            <a id="save" class="btn btn-primary">Tallenna</a>
+            <a id="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> Tallenna</a>
             
          </div>
 
