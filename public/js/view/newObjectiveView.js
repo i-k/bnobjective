@@ -15,9 +15,11 @@ define(['./../js/settings.js',
       // this.setElement('#items'); // TODO: update to use this!
       _.bindAll(this, 'render')
       this.sessionModel = options.sessionModel
+      this.collection.on('all', this.render)
     },
 
     close: function(){
+      this.collection.off('all', this.render)
       $('#main *').off("click.common")
     },
 
@@ -27,8 +29,13 @@ define(['./../js/settings.js',
       var self = this
       console.log('Rendering...' + event)
       var $el = this.$el
+      var items = { "item": this.collection.toJSON() }
+      console.log(items)
 
-      $el.html(this.itemTemplate({}))
+      if (items.item.length > 0)
+        $el.html(this.itemTemplate(items.item[0]))
+      else
+        $el.html(this.itemTemplate({}))
 
       $('#save').on('click.common', function(){
          console.log('Saving... ' + Settings.bnobjective.addObjective)
@@ -52,11 +59,17 @@ define(['./../js/settings.js',
            , entrySuccessMaxAmount = $('#entrySuccessMaxAmount').val()
            , tags = $('#tags').val()
            , isPublic = $('#isPublic').val()
+           , id = null
+
+         var itemsTmp = this.collection.toJSON()
+         if (itemsTmp.length > 0)
+           id = itemsTmp[0]._id
          
          $.ajax({
           type: "POST",
-          url: Settings.bnobjective.addObjective,
+          url: Settings.bnobjective.addOrUpdateObjective,
           data: {
+            id: id, // if id exists (is not null), then we do update, otherwise create a new objective
             uid: self.sessionModel.get('user'),
             app: Settings.bnauth.appName,
             sid: self.sessionModel.get('auth_token'),

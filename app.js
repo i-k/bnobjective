@@ -76,9 +76,24 @@ var Objective = mongoose.model('Objective', schemaObjective)
 
 // TODO: add validations for each field
 // TODO: min lengths for fields also!
+
+Objective.schema.path('name').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+  else
+    return value.length > 0
+}, 'Objective name is missing.')
+
 Objective.schema.path('name').validate(function (value) {
   return value.length <= settings.maxObjectiveNameLength
 }, 'Name too long for objective. Max ' + settings.maxObjectiveNameLength + ' characters.')
+
+Objective.schema.path('description').validate(function (value) {
+  if (typeof value === 'undefined')
+    return false
+  else
+    return value.length >= 0
+}, 'Objective description is missing.')
 
 Objective.schema.path('description').validate(function (value) {
   return value.length <= settings.maxObjectiveDescriptionLength
@@ -239,8 +254,9 @@ function validateUser(username, application, sessionId, callback){
   })
 }
 
-app.post('/api/add-objective', function(req, res){
-  var username = req.body.uid
+app.post('/api/objective', function(req, res){
+  var id = req.body.id // if id is not null then update, otherwise add new
+    , username = req.body.uid
     , application = req.body.app
     , sessionId = req.body.sid
 
@@ -301,7 +317,32 @@ console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + 
   validateUser(username, application, sessionId, function(result){
     if (result.result.message === 'validated'){
       console.log("Validated")
-	  var newObjective = new Objective({ application: application,
+      
+      // TODO: find existing objective:
+      Objective.find({_id: id, username: username, application: application}, function(foundObjective){
+        if (foundObjective !== null){
+          // update existing
+          application: application,
+          username: username,
+          name: objectiveName,
+          description: objectiveDescription,
+          expirationDate: objectiveExpirationDate,
+          recordInterval: objectiveRecordInterval,
+          recordWindow: objectiveRecordWindow,
+          tags: objectiveTags,
+          isPublic: objectiveIsPublic,
+          entryTitleText: objectiveEntryTitleText,
+          entryUnitOfMeasure: objectiveEntryUnitOfMeasure,
+          entryMinAmount: objectiveEntryMinAmount,
+          entryMaxAmount: objectiveEntryMaxAmount,
+          entrySuccessMinAmount: objectiveEntrySuccessMinAmount,
+          entrySuccessMaxAmount: objectiveEntrySuccessMaxAmount,
+          allowedHosts: [],
+          awardsAndRanks: {},
+          changedTimestamp: new Date()
+        } else {
+          // create new
+      var newObjective = new Objective({ application: application,
                                          username: username,
                                          name: objectiveName,
                                          description: objectiveDescription,
@@ -329,6 +370,10 @@ console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + 
         } else
           return writeResult(res, 201, "Objective created", newObjective)
       })
+
+        }
+      })
+      
 	  
     } else
       return writeResult(res, result.result.status, result.result.message)

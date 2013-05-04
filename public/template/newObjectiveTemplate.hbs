@@ -66,8 +66,8 @@
                   {{this.name}}
                 {{/if}}
               </input><br />
-              <label>Kuvaus</label><textarea id="description" rows=3></textarea><br />
-              <label>Päättyy</label><input id="expirationDate" type="date"></input> <br />
+              <label>Kuvaus</label><textarea id="description" rows=3>{{#if this.description}}{{this.description}}{{/if}}</textarea><br />
+              <label>Päättyy</label><input id="expirationDate" type="date" value="{{#if this.expirationDate}}{{this.expirationDate}}{{/if}}"></input> <br />
               
               <h4>Kirjausväli</h4>
               <p>Tavoitteen välietappien kirjausväli</p>
@@ -272,16 +272,16 @@
 
               </div>
 
-              <label>Kirjauksen otsikko</label><input id="entryTitleText" type="text" placeholder="Onnistuitko tavoitteessa?"></input><br />
-              <label>Kirjausyksikkö</label><input id="entryUnitOfMeasure" type="text" placeholder="Jätä tyhjäksi ei tallenneta määriä"></input><br />
-              <label>Minimimäärä kirjausyksikölle</label><input id="entryMinAmount" type="number"></input><br />
-              <label>Maksimimäärä kirjausyksikölle</label><input id="entryMaxAmount" type="number"></input><br />
-              <label>Onnistumisen minimimäärä kirjausyksikölle</label><input id="entrySuccessMinAmount" type="number"></input><br />
-              <label>Onnistumisen maksimimäärä kirjausyksikölle</label><input id="entrySuccessMaxAmount" type="number"></input><br />
+              <label>Kirjauksen otsikko</label><input id="entryTitleText" type="text" placeholder="Onnistuitko tavoitteessa?" value="{{#if this.entryTitleText}}{{this.entryTitleText}}{{/if}}"></input><br />
+              <label>Kirjausyksikkö</label><input id="entryUnitOfMeasure" type="text" placeholder="Jätä tyhjäksi ei tallenneta määriä" value="{{#if this.entryUnitOfMeasure}}{{this.entryUnitOfMeasure}}{{/if}}"></input><br />
+              <label>Minimimäärä kirjausyksikölle</label><input id="entryMinAmount" type="number" value="{{#if this.entryMinAmount}}{{this.entryMinAmount}}{{/if}}"></input><br />
+              <label>Maksimimäärä kirjausyksikölle</label><input id="entryMaxAmount" type="number" value="{{#if this.entryMaxAmount}}{{this.entryMaxAmount}}{{/if}}"></input><br />
+              <label>Onnistumisen minimimäärä kirjausyksikölle</label><input id="entrySuccessMinAmount" type="number" value="{{#if this.entrySuccessMinAmount}}{{this.entrySuccessMinAmount}}{{/if}}"></input><br />
+              <label>Onnistumisen maksimimäärä kirjausyksikölle</label><input id="entrySuccessMaxAmount" type="number" value="{{#if this.entrySuccessMaxAmount}}{{this.entrySuccessMaxAmount}}{{/if}}"></input><br />
 
-              <label>Tagit</label><input id="tags" type="text"></input> <br />
+              <label>Tagit</label><input id="tags" type="text" value="{{#if this.tags}}{{this.tags}}{{/if}}"></input> <br />
               <label class="checkbox">
-                <input id="isPublic" type="checkbox" value="">
+                <input id="isPublic" type="checkbox" value="" value="{{#if this.isPublic}}checked{{/if}}">
                 Tavoite muiden nähtävissä?
               </label>
             </fieldset>
