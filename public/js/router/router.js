@@ -1,4 +1,5 @@
 define([
+  './../js/settings.js',
   'lib/jquery',
   'lib/underscore',
   'lib/backbone',
@@ -12,7 +13,7 @@ define([
   'collection/itemCollection',
 ],
 
-  function($, _, Backbone, ObjectivesView, ObjectiveDetailsView, NewObjectiveView,
+  function(Settings, $, _, Backbone, ObjectivesView, ObjectiveDetailsView, NewObjectiveView,
            MenuView, FrontpageView, RegisterView, Item, ItemCollection){
 
   var AppRouter = Backbone.Router.extend({
@@ -22,6 +23,7 @@ define([
       'objectives/:identifier': 'renderObjectiveByIdentifier',
       'objectives': 'render',
       'new-objective': 'renderNewObjective',
+      'update-objective/:id': 'renderNewObjective',
       'register': 'renderRegister',
       '*actions': 'render' // Default
     },
@@ -74,22 +76,29 @@ define([
       }
     },
 
-    renderObjectiveByIdentifier: function(identifier){
+    renderObjectiveById: function(id){
       this.closeViews()
-      console.log('Route: objective by identifier: ', identifier)
-      $('#page-description').html('Tavoite: ' + identifier)
-      this.itemCollection.setIdentifier(identifier)
+      console.log('Route: objective by identifier: ', id)
+      $('#page-description').html('Tavoite: ' + id)
+      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
+      this.itemCollection.setId(id)
       this.itemCollection.fetch()
-      var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection, identifier: identifier})
+      var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection})
       objectiveDetailsView.render()
       window.views.push(objectiveDetailsView)
     },
 
-    renderNewObjective: function(){
+    renderNewObjective: function(id){
       this.closeViews()
       console.log('Route: new-objective')
       $('#page-description').html('Uusi tavoite')
-      var newObjectiveView = new NewObjectiveView({sessionModel: session})
+      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
+
+      if (id !== null)
+        this.itemCollection.setId(id)
+
+      this.itemCollection.fetch()
+      var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: session})
       newObjectiveView.render()
       window.views.push(newObjectiveView)
     },

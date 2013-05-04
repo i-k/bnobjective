@@ -319,27 +319,36 @@ console.log('GOT: ' + username + ', ' + application + ', ' + sessionId + ', ' + 
       console.log("Validated")
       
       // TODO: find existing objective:
-      Objective.find({_id: id, username: username, application: application}, function(foundObjective){
-        if (foundObjective !== null){
+      Objective.findOne({_id: id, username: username, application: application}, function(err, foundObjective){
+        if (!foundObjective){
           // update existing
-          application: application,
-          username: username,
-          name: objectiveName,
-          description: objectiveDescription,
-          expirationDate: objectiveExpirationDate,
-          recordInterval: objectiveRecordInterval,
-          recordWindow: objectiveRecordWindow,
-          tags: objectiveTags,
-          isPublic: objectiveIsPublic,
-          entryTitleText: objectiveEntryTitleText,
-          entryUnitOfMeasure: objectiveEntryUnitOfMeasure,
-          entryMinAmount: objectiveEntryMinAmount,
-          entryMaxAmount: objectiveEntryMaxAmount,
-          entrySuccessMinAmount: objectiveEntrySuccessMinAmount,
-          entrySuccessMaxAmount: objectiveEntrySuccessMaxAmount,
-          allowedHosts: [],
-          awardsAndRanks: {},
-          changedTimestamp: new Date()
+          foundObjective.application = application,
+          foundObjective.username = username,
+          foundObjective.name = objectiveName,
+          foundObjective.description = objectiveDescription,
+          foundObjective.expirationDate = objectiveExpirationDate,
+          foundObjective.recordInterval = objectiveRecordInterval,
+          foundObjective.recordWindow = objectiveRecordWindow,
+          foundObjective.tags = objectiveTags,
+          foundObjective.isPublic = objectiveIsPublic,
+          foundObjective.entryTitleText = objectiveEntryTitleText,
+          foundObjective.entryUnitOfMeasure = objectiveEntryUnitOfMeasure,
+          foundObjective.entryMinAmount = objectiveEntryMinAmount,
+          foundObjective.entryMaxAmount = objectiveEntryMaxAmount,
+          foundObjective.entrySuccessMinAmount = objectiveEntrySuccessMinAmount,
+          foundObjective.entrySuccessMaxAmount = objectiveEntrySuccessMaxAmount,
+          foundObjective.allowedHosts = [],
+          foundObjective.awardsAndRanks = {},
+          foundObjective.changedTimestamp = new Date()
+          
+          foundObjective.save(function(err){
+            if (err){
+              console.log('An error occured')
+              return writeResult(res, 500, "Error: " + err)
+            } else
+              return writeResult(res, 200, "Objective updated", foundObjective)
+          })
+          
         } else {
           // create new
       var newObjective = new Objective({ application: application,
@@ -492,9 +501,36 @@ app.post('/api/update-host', function(req, res){
 
 })
 
-app.get('/api/objectives/:user', function(req, res){
-  // params: by tags, by active -status
-  return writeResult(res, 200, "TODO")
+app.get('/api/objectives', function(req, res){
+  // TODO: by params: by tags, by active -status
+  var appName = req.query["app"]
+    , sessionId = req.query["sid"]
+    , username = req.query["uid"]
+    , id = req.query["id"]
+
+  validateUser(username, appName, sessionId, function(result){
+    if (result.result.message === 'validated'){
+      console.log("Validated")
+      
+      var queryObj = {
+                      username: username,
+                      application: appName
+                     }      
+
+      if (typeof id !== 'undefined')
+        queryObj._id = id
+
+      console.log(queryObj)
+
+      Objective.find(queryObj, function(err, foundObjectives){
+        if (foundObjectives)
+          return writeResult(res, 200, "success", foundObjectives)
+        else
+          return writeResult(res, 200, "success", [])
+      })
+    } else
+      return writeResult(res, 412, result.result.message)
+  })
 })
 
 app.get('/api/objectives/:objectiveId/entries', function(req, res){

@@ -8,21 +8,25 @@ define(['./../js/settings.js',
     url: Settings.baseUrl + 'api/objectives', // default url when loading this first time
     model: Item,
     parse: function(items){
-      // console.log('parsing...%o' , items);
-      var parsedModels = new Array();
+      // console.log('parsing...%o' , items)
+      var parsedModels = new Array()
       _.each(items, function(itemArray){
         _.each(itemArray, function(item){
-          // console.log(item);
-          parsedModels.push(new Item(item));
+          // console.log(item)
+          parsedModels.push(new Item(item))
         })
       })
-      return parsedModels;
+      return parsedModels
     },
-    setUrl: function(url){
-      this.url = url;
-      console.log("Url is now: " + this.url);
+    setCredentials: function(username, appName, sessionId){
+      this.url = this.url + '?uid=' + username + '&app=' + appName + '&sid=' + sessionId
+      console.log("Url is now: " + this.url)
+    },
+    setId: function(id){
+      this.url = this.url + '&id=' + id
+      console.log("Url is now: " + this.url)
     }
-  });
-  return itemCollection;
+  })
+  return itemCollection
 
-});
+})

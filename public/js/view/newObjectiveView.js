@@ -62,6 +62,7 @@ define(['./../js/settings.js',
            , id = null
 
          var itemsTmp = this.collection.toJSON()
+         // if updating existing objective, get the id (else send null, which creates a new objective):
          if (itemsTmp.length > 0)
            id = itemsTmp[0]._id
          
@@ -103,8 +104,10 @@ define(['./../js/settings.js',
             console.log(result)
             if(result.result.status == 200){
               console.log(result)
+              $('#messages').html('Tallennettu')
             } else {
               console.log("Couldn't save! " + result)
+              $('#messages').html('Tallennus epäonnistui!')
             }
           },
           dataType: 'json'
