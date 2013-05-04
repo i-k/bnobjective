@@ -64,6 +64,8 @@ define([
           // TODO: fetch objectives for collection
           console.log('USER INFO:')
           console.log(session.get('user'))
+          this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
+          this.itemCollection.fetch()
           var objectivesView = new ObjectivesView({collection: this.itemCollection})
           objectivesView.render()
           window.views.push(objectivesView)
@@ -80,7 +82,7 @@ define([
       this.closeViews()
       console.log('Route: objective by identifier: ', id)
       $('#page-description').html('Tavoite: ' + id)
-      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
+      this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
       this.itemCollection.setId(id)
       this.itemCollection.fetch()
       var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection})
@@ -88,16 +90,18 @@ define([
       window.views.push(objectiveDetailsView)
     },
 
+    // new or update
     renderNewObjective: function(id){
       this.closeViews()
       console.log('Route: new-objective')
       $('#page-description').html('Uusi tavoite')
-      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
 
-      if (id !== null)
+      if (id !== null) {
+        this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
         this.itemCollection.setId(id)
+        this.itemCollection.fetch()
+      }
 
-      this.itemCollection.fetch()
       var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: session})
       newObjectiveView.render()
       window.views.push(newObjectiveView)

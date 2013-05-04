@@ -12,38 +12,22 @@
         <br />
       
         <div class="row">
-
-         <div class="span3 well">
+        {{#each item}}
+          <div class="span3 well">
             <strong>Nimi: {{this.name}}</strong>
             Kuvaus: {{this.description}}
             Päättyy: {{this.expirationDate}}
             Tagit: {{this.tags}}
             Julkinen: {{this.isPublic}}
             Luotu: {{this.createdTimestamp}}
-         </div>
-         <div class="span3 well">
-           <strong>Nimi: {{this.name}}</strong>
-            Kuvaus: {{this.description}}
-            Päättyy: {{this.expirationDate}}
-            Tagit: {{this.tags}}
-            Julkinen: {{this.isPublic}}
-            Luotu: {{this.createdTimestamp}}
+            <br/>
+            <a id="{{this._id}}-update" class="btn"><i class="icon-edit"></i> Muokkaa</a>
+            <a id="{{this._id}}-add-entry" class="btn"><i class="icon-check"></i> Tee kirjaus</a>
           </div>
-
+        {{/each}}
         </div>
       </div>  
   
-    {{#each item}}
-      <div class="span4">
-        <strong>Nimi: {{this.name}}</strong>
-        Kuvaus: {{this.description}}
-        Päättyy: {{this.expirationDate}}
-        Tagit: {{this.tags}}
-        Julkinen: {{this.isPublic}}
-        Luotu: {{this.createdTimestamp}}
-      </div>
-    {{/each}}
-    
    <div class="span4">
      <img src="http://c69282.r82.cf3.rackcdn.com/4K7F0360-1.jpg"></img>
    </div>
