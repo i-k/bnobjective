@@ -4,6 +4,7 @@
  * TODO next: route to add objective and entry, testpage for these
  *   => min lengths for fields for objective
  *   => check that validations actually work
+ *
  */
 
 var express = require('express')
@@ -507,18 +508,22 @@ app.get('/api/objectives', function(req, res){
     , sessionId = req.query["sid"]
     , username = req.query["uid"]
     , id = req.query["id"]
+    , searchUsername = req.query["suid"]
 
   validateUser(username, appName, sessionId, function(result){
     if (result.result.message === 'validated'){
       console.log("Validated")
       
       var queryObj = {
-                      username: username,
+                      username: searchUsername,
                       application: appName
                      }      
 
       if (typeof id !== 'undefined')
         queryObj._id = id
+
+      if (username !== searchUsername)
+        queryObj.isPublic = true
 
       console.log(queryObj)
 

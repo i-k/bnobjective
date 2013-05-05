@@ -65,6 +65,7 @@ define([
           console.log('USER INFO:')
           console.log(session.get('user'))
           this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
+          this.itemCollection.setSearchUserId(session.get('user'))
           this.itemCollection.fetch()
           var objectivesView = new ObjectivesView({collection: this.itemCollection})
           objectivesView.render()
@@ -84,6 +85,7 @@ define([
       $('#page-description').html('Tavoite: ' + id)
       this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
       this.itemCollection.setId(id)
+      this.itemCollection.setSearchUserId(session.get('user'))
       this.itemCollection.fetch()
       var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection})
       objectiveDetailsView.render()
@@ -99,11 +101,13 @@ define([
       if (typeof id !== 'undefined' && id !== null) {
         this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
         this.itemCollection.setId(id)
+        this.itemCollection.setSearchUserId(session.get('user'))
         this.itemCollection.fetch()
         $('#page-description').html('Muokkaa tavoitetta')
       } else {
         this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
         this.itemCollection.setId(id)
+        this.itemCollection.setSearchUserId(session.get('user'))
         this.itemCollection.fetch()
       }
       console.log('RENDER:')

@@ -26,6 +26,10 @@ define(['./../js/settings.js',
     setId: function(id){
       this.url = this.url + '&id=' + id
       console.log("Url is now: " + this.url)
+    },
+    setSearchUserId: function(suid){
+      this.url = this.url + '&suid=' + suid
+      console.log("Url is now: " + this.url)
     }
   })
   return itemCollection
