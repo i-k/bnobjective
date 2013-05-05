@@ -46,11 +46,6 @@ define(['./../js/settings.js',
       console.log('ROWS')
       console.log(rows)
 
-      $('#new-objective').on('click.common', function(){
-          // TODO: ohjaa sivulle, jossa voi luoda uuden tavoitteen:
-          Backbone.history.navigate('#/new-objective', {trigger: true})
-      })
-
       return this
     }
 
