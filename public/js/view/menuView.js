@@ -107,9 +107,9 @@ define(['./../js/settings.js',
             console.log(result)
             if(result.result.status == 200){
               model.set({user: null, auth_token: null})
-              Backbone.history.navigate('/', {trigger: true}) // go to frontpage after logging out!
+              Backbone.history.navigate('/', {trigger: true}) // go to frontpage after logging out
             } else {
-              console.log("Couldn't logout! " + result.result.status)
+              Backbone.history.navigate('/', {trigger: true}) // go to frontpage, user already logged out.
             }
           },
           dataType: 'json'

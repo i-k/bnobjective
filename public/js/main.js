@@ -38,7 +38,8 @@ requirejs.config({
        exports: '$.fn.fixheadertable'
      },
      "lib/bootstrap-alert": ["jquery"],
-     "lib/bootstrap-dropdown": ["jquery"]
+     "lib/bootstrap-dropdown": ["jquery"],
+     "lib/bootstrap-tooltip": ["jquery"]
   }
 });
 

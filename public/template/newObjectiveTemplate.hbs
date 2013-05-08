@@ -6,279 +6,268 @@
         <img src="http://c69282.r82.cf3.rackcdn.com/imagery_02_11_08_000112.jpg"></img>
         <p>Tavoitteet ovat Kimppatsempparin ydin. Alla on ohjeita kuinka teet
            tavoitteesta mahdollisimman hyvän.</p>
-        <p>Tärkeintä on, että jaat tavoitteen osiin. Jos tavoite on laihduttaa 10
-           kiloa neljässä kuukaudessa, voi sopiva tarkistusväli olla viikon välein.
-           Tällöin tärkeintä on, että edistystä on tapahtunut tavoitteessa määritelty
-           määrä. Tavoitteeksi kannattaa siis asettaa esim. 600 g per viikko, jolloin
+        <p>Jaa tavoite osiin. Jos tavoite on laihduttaa 10
+           kiloa neljässä kuukaudessa, voi sopiva tarkistusväli on viikon välein.
+           Tavoitteeksi kannattaa siis asettaa esim. 600 g per viikko. Tällöin
            neljän kuukauden kuluessa on laihdutettu noin 10 kiloa. Tavoitteen saavuttamisessa
-           on tärkeintä pitkäjänteisyys ja se, että joka tarkistusvälillä kirjataan onko saavutettu
-           asetettu välitavoite vai ei.</p>
+           on tärkeintä pitkäjänteisyys. Kimppatsemppari muistuttaa sinua tekemään kirjaukset.
+           Tee kirjaus vaikka et olisi pysynyt tavoitteessa!</p>
         <p>Kimppatsemppari mahdollistaa tavoitteen seurannan joko määrällisesti, tai
            kyllä / ei -vaihtoehdon avulla. Esim. viikon välein voidaan kertoa kuinka
-           monta grammaa viikon aikana tarkalleen on laihduttu. Toisaalta jos seurannassa
-           ei haluta olla näin tarkkoja, vaan tärkeänä pidetään tavoitteessa pysymistä,
-           niin voidaan kirjata vain pysyttiinkö viikon aikana tavoitteessa vai ei.</p>
-        <ul>
-          <li><strong>Kirjausväli:</strong> Tavoite jaetaan osiin ja tavoitteen edistymistä
-              seurataan halutulla aikavälillä. Esim. viikon välein kirjataan kuinka paljon
-              on laihdutettu.</li>
-          <li><strong>Kirjausaika:</strong> Jos haluat, voit kertoa milloin on mahdollista
-              tehdä kirjauksia. Esim. jos kirjausväli on yksi viikko, ja haluat että kirjaus
-              on mahdollista vasta kun on kulunut kuusi päivää, annetaan kirjausajaksi yksi päivä.
-              Kirjausaika lasketaan kirjausvälin lopusta, eli yksi viikko = 7 päivää => 7 - 1 = 6 päivää.
-              Huom. jos kentän jättää tyhjäksi, on kirjausaika sama kuin kirjausväli, eli voit
-              tehdä kirjauksen milloin tahansa.</li>
-          <li><strong>Kirjauksen otsikko:</strong> Kun tallennat tavoitteen välietapin, kerrot
-              kuinka olet pysynyt tavoitteessa. Tämä kysymys on tavoitteeseesi räätälöity
-              välietapin tarkistuskysymys. Esim. viikon välein voitaisiin kysyä: "Kuinka monta grammaa laihdutit?"</li>
-          <li><strong>Kirjausyksikkö:</strong> <u>Jätä tämä tyhjäksi jos et halua kirjata määriä!</u>
-              Muussa tapauksessa aina kirjauksen yhteydessä tulee ilmoittaa jokin määrä. Esim. "Laihduin 560 grammaa."
-              Tällöin kirjausyksikkö on "grammaa". Huom. Kirjattavan määrän tulee olla kokonaisluku! Tällöin
-              esim. kirjausyksikkö "Kg (kilogrammaa)" saattaisi olla liian karkealla tasolla.</li>
-          <li><strong>Minimimäärä kirjausyksikölle:</strong> Jos kirjausyksikkö on annettu, niin
-              tällöin minimimäärä kirjausyksikölle on pienin sallittu kirjattava määrä. Yritys kirjata
-              tätä pienempi määrä antaa virheilmoituksen ja kirjaus ei onnistu.</li>
-          <li><strong>Maksimimäärä kirjausyksikölle:</strong> Jos kirjausyksikkö on annettu, niin
-              tällöin maksimimäärä kirjausyksikölle on suurin sallittu kirjattava määrä. Yritys kirjata
-              tätä suurempi määrä antaa virheilmoituksen ja kirjaus ei onnistu.</li>
-          <li><strong>Onnistumisen minimimäärä kirjausyksikölle:</strong> Kimppatsemppari pitää kirjaa 
-              onnistuttiinko tavoitteessa vai ei. Jos kirjausyksikkö on annettu, niin kirjattavan määrän
-               tulee olla suurempi tai yhtäsuuri kuin onnistumisen minimimäärä kirjausyksikölle jotta
-               kirjaus laskettaisiin onnistumiseksi.</li>
-          <li><strong>Onnistumisen maksimimäärä kirjausyksikölle:</strong> Jos kirjausyksikkö on annettu, niin kirjattavan määrän
-               tulee olla pienempi tai yhtäsuuri kuin onnistumisen maksimimäärä kirjausyksikölle jotta
-               kirjaus laskettaisiin onnistumiseksi. Tämä karsii syöttövirheistä johtuvia vääristymiä.</li>
-          <li><strong>Tagit:</strong> Tagien avulla on mahdollista etsiä tavoite.</li>
-          <li><strong>Tavoite muiden nähtävissä?:</strong> Mahdollisuus antaa muille lupa löytää oma tavoite ja seurata
-              omaa tavoitteessa edistymistä.</li>
-        </ul>
+           monta grammaa viikon aikana tarkalleen on laihduttu. Jos seurannassa
+           ei haluta olla näin tarkkoja, voidaan kirjata vain pysyttiinkö viikon aikana tavoitteessa vai ei.</p>
       </div>
   
-      <div class="span8 well">
-            
-        <div class="row">
+      <div class="span12 well">
 
          <div class="span4 well">
             <fieldset>
               <legend>Tavoitteet tiedot</legend>
-              <label>Nimi</label><input id="name" type="text" value="{{#if this.name}}{{this.name}}{{/if}}"></input><br />
-              <label>Kuvaus</label><textarea id="description" rows=3>{{#if this.description}}{{this.description}}{{/if}}</textarea><br />
-              <label>Päättyy</label><input id="expirationDate" type="date" value="{{#if this.expirationDate}}{{this.expirationDate}}{{/if}}"></input> <br />
+              <label>Tavoite</label><input id="name" type="text" value="{{#if this.name}}{{this.name}}{{/if}}"></input><br />
+              <label>Kuvaus / lisätietoja</label><textarea id="description" rows=3>{{#if this.description}}{{this.description}}{{/if}}</textarea><br />
+              <label>Seuranta päättyy</label><input id="expirationDate" type="date" value="{{#if this.expirationDate}}{{this.expirationDate}}{{/if}}"></input> <br />
               
-              <h4>Kirjausväli</h4>
+              <h4>Kirjausväli <i rel="tooltip" data-toggle="tooltip" title="Tavoite jaetaan osiin ja tavoitteen edistymistä
+              seurataan halutulla aikavälillä. Esim. viikon välein kirjataan kuinka paljon on laihdutettu." class="icon-question-sign"></i></h4>
               <p>Tavoitteen välietappien kirjausväli</p>
               <div class="row" style="border: 1px dotted #dddddd; margin: 1%;">
                 <div class="span1">
                   <label>Kuukaudet</label>
                   <select id="recordIntervalMonths" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
                   </select>
                 </div>
                 <div class="span1">
                   <label>Viikot</label>
                   <select id="recordIntervalWeeks" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                   </select>                
                 </div>
                 
                 <div class="span1">
                   <label>Päivät</label>
                   <select id="recordIntervalDays" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                    <option>16</option>
-                    <option>17</option>
-                    <option>18</option>
-                    <option>19</option>
-                    <option>20</option>
-                    <option>21</option>
-                    <option>22</option>
-                    <option>23</option>
-                    <option>24</option>
-                    <option>25</option>
-                    <option>26</option>
-                    <option>27</option>
-                    <option>28</option>
-                    <option>29</option>
-                    <option>30</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value=11">11</option>
+                    <option value=12">12</option>
+                    <option value=13">13</option>
+                    <option value=14">14</option>
+                    <option value=15">15</option>
+                    <option value=16">16</option>
+                    <option value=17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
                   </select>
                 </div>
                 <div class="span1">
                   <label>Tunnit</label>
                   <select id="recordIntervalHours" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                    <option>16</option>
-                    <option>17</option>
-                    <option>18</option>
-                    <option>19</option>
-                    <option>20</option>
-                    <option>21</option>
-                    <option>22</option>
-                    <option>23</option>
-                    <option>24</option>
-                  </select>                
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                  </select>
+                  <a id="toggleRecordWindowExtra" class="btn pull-left" title="Tarkemmat asetukset"><i class="icon-wrench"></i> Lisävalinnat</a>
                 </div>                
-                
+
               </div>    
               <br />
 
               <!-- advanced option -->
-              <h4>Kirjausaika</h4>
+              <div id="recordWindowExtra" style="display: none;">
+              <h4>Kirjausaika <i rel="tooltip" data-toggle="tooltip" title="Jos haluat, voit kertoa milloin on mahdollista
+              tehdä kirjauksia. Esim. jos kirjausväli on yksi viikko, ja jos haluat että kirjaus
+              on mahdollista vasta kun on kulunut kuusi päivää, annetaan kirjausajaksi yksi päivä.
+              Kirjausaika lasketaan kirjausvälin lopusta. Jos kentän jättää tyhjäksi, on kirjausaika sama kuin kirjausväli, eli voit
+              tehdä kirjauksen milloin tahansa." class="icon-question-sign"></i></h4>
               <p>Milloin kirjaus on mahdollista tehdä kirjausvälillä.
                  Aika lasketaan kirjausvälin lopusta taaksepäin</p>
               <div class="row" style="border: 1px dotted #dddddd; margin: 1%;">
                 <div class="span1">
                   <label>Kuukaudet</label>
                   <select id="recordWindowMonths" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
                   </select>
                 </div>
                 <div class="span1">
                   <label>Viikot</label>
                   <select id="recordWindowWeeks" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                   </select>                
                 </div>
                 
                 <div class="span1">
                   <label>Päivät</label>
                   <select id="recordWindowDays" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                    <option>16</option>
-                    <option>17</option>
-                    <option>18</option>
-                    <option>19</option>
-                    <option>20</option>
-                    <option>21</option>
-                    <option>22</option>
-                    <option>23</option>
-                    <option>24</option>
-                    <option>25</option>
-                    <option>26</option>
-                    <option>27</option>
-                    <option>28</option>
-                    <option>29</option>
-                    <option>30</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
                   </select>
                 </div>
                 <div class="span1">
                   <label>Tunnit</label>
                   <select id="recordWindowHours" class="span1">
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                    <option>16</option>
-                    <option>17</option>
-                    <option>18</option>
-                    <option>19</option>
-                    <option>20</option>
-                    <option>21</option>
-                    <option>22</option>
-                    <option>23</option>
-                    <option>24</option>
-                  </select>                
-                </div>                
-
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                  </select>
+                </div>
+              </div>
               </div>
 
-              <label>Kirjauksen otsikko</label><input id="entryTitleText" type="text" placeholder="Onnistuitko tavoitteessa?" value="{{#if this.entryTitleText}}{{this.entryTitleText}}{{/if}}"></input><br />
-              <label>Kirjausyksikkö</label><input id="entryUnitOfMeasure" type="text" placeholder="Jos tyhjä, niin ei tallenneta määriä" value="{{#if this.entryUnitOfMeasure}}{{this.entryUnitOfMeasure}}{{/if}}"></input><br />
-              <label>Minimimäärä kirjausyksikölle</label><input id="entryMinAmount" class="input-small" type="number" value="{{#if this.entryMinAmount}}{{this.entryMinAmount}}{{/if}}"></input><br />
-              <label>Maksimimäärä kirjausyksikölle</label><input id="entryMaxAmount" class="input-small" type="number" value="{{#if this.entryMaxAmount}}{{this.entryMaxAmount}}{{/if}}"></input><br />
-              <label>Onnistumisen minimimäärä kirjausyksikölle</label><input id="entrySuccessMinAmount" class="input-small" type="number" value="{{#if this.entrySuccessMinAmount}}{{this.entrySuccessMinAmount}}{{/if}}"></input><br />
-              <label>Onnistumisen maksimimäärä kirjausyksikölle</label><input id="entrySuccessMaxAmount" class="input-small" type="number" value="{{#if this.entrySuccessMaxAmount}}{{this.entrySuccessMaxAmount}}{{/if}}"></input><br />
-
-              <label>Tagit</label><input id="tags" type="text" value="{{#if this.tags}}{{this.tags}}{{/if}}"></input> <br />
+              <label>Kirjauksen otsikko</label><input id="entryTitleText" type="text" placeholder="Onnistuitko tavoitteessa?" value="{{#if this.entryTitleText}}{{this.entryTitleText}}{{/if}}"></input>
+                <i rel="tooltip" data-toggle="tooltip" title="Kun tallennat tavoitteen välietapin, kerrot
+              kuinka olet pysynyt tavoitteessa. Tämä kysymys on tavoitteeseesi räätälöity
+              välietapin tarkistuskysymys. Esim. viikon välein voitaisiin kysyä: 'Kuinka monta grammaa laihdutit?'" class="icon-question-sign"></i><br />
+              <label>Kirjausyksikkö</label><input id="entryUnitOfMeasure" type="text" placeholder="Jos tyhjä, niin ei tallenneta määriä" value="{{#if this.entryUnitOfMeasure}}{{this.entryUnitOfMeasure}}{{/if}}"></input>
+                  <i rel="tooltip" data-toggle="tooltip" title="Jätä tämä tyhjäksi jos et halua kirjata määriä!
+              Muussa tapauksessa aina kirjauksen yhteydessä tulee ilmoittaa jokin määrä. Esim. 'Laihduin 560 grammaa.'
+              Tällöin kirjausyksikkö on 'grammaa'. Huom. Kirjattavan määrän tulee olla kokonaisluku! Tällöin
+              esim. kirjausyksikkö 'Kg (kilogrammaa)' saattaisi olla liian karkealla tasolla." class="icon-question-sign"></i><br />
+              <a id="toggleUomExtra" class="btn pull-left" title="Tarkemmat asetukset"><i class="icon-wrench"></i> Lisävalinnat</a><br /><br />
+              <div id="uomExtra" style="display: none;">
+                <label>Minimimäärä kirjausyksikölle</label><input id="entryMinAmount" class="input-small" type="number" value="{{#if this.entryMinAmount}}{{this.entryMinAmount}}{{/if}}{{#unless this.entryMinAmount}}0{{/unless}}"></input>
+                  <i rel="tooltip" data-toggle="tooltip" title="Jos kirjausyksikkö on annettu, niin
+              tällöin minimimäärä kirjausyksikölle on pienin sallittu kirjattava määrä. Yritys kirjata
+              tätä pienempi määrä antaa virheilmoituksen ja kirjaus ei onnistu." class="icon-question-sign"></i><br />
+                <label>Maksimimäärä kirjausyksikölle</label><input id="entryMaxAmount" class="input-small" type="number" value="{{#if this.entryMaxAmount}}{{this.entryMaxAmount}}{{/if}}{{#unless this.entryMaxAmount}}0{{/unless}}"></input>
+                  <i rel="tooltip" data-toggle="tooltip" title="Jos kirjausyksikkö on annettu, niin
+              tällöin maksimimäärä kirjausyksikölle on suurin sallittu kirjattava määrä. Yritys kirjata
+              tätä suurempi määrä antaa virheilmoituksen ja kirjaus ei onnistu." class="icon-question-sign"></i><br />
+                <label>Onnistumisen minimimäärä kirjausyksikölle</label><input id="entrySuccessMinAmount" class="input-small" type="number" value="{{#if this.entrySuccessMinAmount}}{{this.entrySuccessMinAmount}}{{/if}}{{#unless this.entrySuccessMinAmount}}0{{/unless}}"></input>
+                  <i rel="tooltip" data-toggle="tooltip" title="Kimppatsemppari pitää kirjaa onnistuttiinko tavoitteessa vai ei. Jos kirjausyksikkö on annettu, niin kirjattavan määrän tulee olla suurempi tai yhtäsuuri kuin onnistumisen minimimäärä kirjausyksikölle jotta kirjaus laskettaisiin onnistumiseksi." class="icon-question-sign"></i><br />
+                <label>Onnistumisen maksimimäärä kirjausyksikölle</label><input id="entrySuccessMaxAmount" class="input-small" type="number" value="{{#if this.entrySuccessMaxAmount}}{{this.entrySuccessMaxAmount}}{{/if}}{{#unless this.entrySuccessMaxAmount}}0{{/unless}}"></input>
+                  <i rel="tooltip" data-toggle="tooltip" title="Jos kirjausyksikkö on annettu, niin kirjattavan määrän
+                    tulee olla pienempi tai yhtäsuuri kuin onnistumisen maksimimäärä kirjausyksikölle jotta
+                    kirjaus laskettaisiin onnistumiseksi. Tämä karsii syöttövirheistä johtuvia vääristymiä." class="icon-question-sign"></i><br />
+                <label>Tagit</label><input id="tags" type="text" value="{{#if this.tags}}{{this.tags}}{{/if}}"></input> <br />
+              </div>
               <label class="checkbox">
                 <input id="isPublic" type="checkbox" {{#if this.isPublic}}checked{{/if}}>
-                Tavoite muiden nähtävissä?
+                Tavoite muiden nähtävissä? <i rel="tooltip" data-toggle="tooltip" title="Mahdollisuus antaa muille lupa löytää oma tavoite ja seurata
+              omaa tavoitteessa edistymistä." class="icon-question-sign"></i>
               </label>
             </fieldset>
             
@@ -286,7 +275,7 @@
             
          </div>
 
-         <div class="span3 well">
+         <div class="span4 well">
             <fieldset>
               <legend>Esimerkkitavoite</legend>
               <label>Nimi</label><strong><input type="text" placeholder="10 kg laihduttaminen"></input></strong><br />
@@ -372,8 +361,6 @@
               </label>
             </fieldset>
          </div>
-
-        </div>
 
       </div>
 

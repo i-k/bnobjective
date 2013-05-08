@@ -26,16 +26,40 @@ define(['./../js/settings.js',
     itemTemplate: Handlebars.compile(ItemTemplateSource),
 
     render: function(event){
-      var self = this
       console.log('Rendering...' + event)
-      var $el = this.$el
-      var items = { "item": this.collection.toJSON() }
+      var self = this
+        , $el = this.$el
+        , items = { "item": this.collection.toJSON() }
+
       console.log(items)
 
       if (items.item.length > 0)
         $el.html(this.itemTemplate(items.item[0]))
       else
         $el.html(this.itemTemplate({}))
+
+      // Enable tooltips:
+      $("[rel='tooltip']").tooltip()
+
+      $('#toggleRecordWindowExtra').on('click.common', function(){
+        $('#recordWindowExtra').toggle()
+      })
+
+      $('#toggleUomExtra').on('click.common', function(){
+        $('#uomExtra').toggle()
+      })
+
+      if (items.item.length > 0) {
+        // Set value for recordInterval and recordWindow, if given:
+        $('#recordIntervalMonths option[value="' + items.item[0].recordInterval.months +'"]').prop("selected", true)
+        $('#recordIntervalWeeks option[value="' + items.item[0].recordInterval.weeks +'"]').prop("selected", true)
+        $('#recordIntervalDays option[value="' + items.item[0].recordInterval.days +'"]').prop("selected", true)
+        $('#recordIntervalHours option[value="' + items.item[0].recordInterval.hours +'"]').prop("selected", true)
+        $('#recordWindowMonths option[value="' + items.item[0].recordWindow.months +'"]').prop("selected", true)
+        $('#recordWindowWeeks option[value="' + items.item[0].recordWindow.weeks +'"]').prop("selected", true)
+        $('#recordWindowDays option[value="' + items.item[0].recordWindow.days +'"]').prop("selected", true)
+        $('#recordWindowHours option[value="' + items.item[0].recordWindow.hours +'"]').prop("selected", true)
+      }
 
       $('#save').on('click.common', function(){
          console.log('Saving... ' + Settings.bnobjective.addObjective)
@@ -104,7 +128,7 @@ define(['./../js/settings.js',
             console.log(result)
             if(result.result.status >= 200 && result.result.status < 300){
               console.log(result)
-              $('#messages').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Tallennettu</div>')
+              $('#messages').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Tavoite tallennettu</div>')
               window.scrollTo(0,0)
               Backbone.history.navigate('#/objectives', {trigger: true})
             } else if(result.result.status >= 300 && result.result.status < 500){
@@ -113,6 +137,21 @@ define(['./../js/settings.js',
               window.scrollTo(0,0)
             } else {
               $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button> Tallennus epäonnistui! ' + result.result.message + '</div>')
+              window.scrollTo(0,0)
+            }
+          },
+          error: function(xhr){
+            var jsonResp = JSON.parse(xhr.responseText)
+            if (xhr.status >= 300 && xhr.status < 500) {
+              if (jsonResp.result.message === 'user not logged in') {
+                $('#messages').html('<div class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button> <h4 class="alert-heading">Tallennus epäonnistui!</h4>Et ole kirjautunut sisään</div>')
+                window.scrollTo(0,0)
+              } else {
+                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Tallennus epäonnistui!</h4>' + jsonResp.result.message + '</div>')
+                window.scrollTo(0,0)
+              }
+            } else {
+              $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Tallennus epäonnistui!</h4>' + jsonResp.result.message + '</div>')
               window.scrollTo(0,0)
             }
           },
