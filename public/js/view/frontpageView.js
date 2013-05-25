@@ -30,7 +30,7 @@ define(['./../js/settings.js',
 
     render: function(event){
       var self = this
-      console.log('Rendering...' + event)
+      console.log('Rendering frontpage...' + event)
       var $el = this.$el
       $el.html(this.itemTemplate())
 

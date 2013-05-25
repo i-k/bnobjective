@@ -5,6 +5,9 @@
  *   => min lengths for fields for objective
  *   => check that validations actually work
  *
+ *
+ * NOTES:
+ *   -expirationDate is not set up correctly when updating objective => fix this
  */
 
 var express = require('express')
@@ -392,18 +395,33 @@ console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ',
 })
 
 app.post('/api/remove-objective', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-  if (typeof username === 'undefined') 
+  var id = req.body.id
+    , username = req.body.uid
+    , application = req.body.app
+    , sessionId = req.body.sid
+
+  if (typeof id === 'undefined')
+    return writeResult(res, 412, "Missing id")
+  else if (typeof username === 'undefined') 
     return writeResult(res, 412, "Missing username")
   else if (typeof application === 'undefined')
     return writeResult(res, 412, "Missing application name: misconfigured?")
   else if (typeof sessionId === 'undefined')
     return writeResult(res, 412, "Missing session key: misconfigured?")
 
-  return writeResult(res, 200, "TODO")
+  validateUser(username, application, sessionId, function(result){
+    if (result.result.message === 'validated'){
+      console.log("Validated")
 
+      Objective.remove({_id: id}, function(err){
+        if (!err)
+          return writeResult(res, 200, "success")
+        else
+          return writeResult(res, 500, err)
+      })
+    } else
+      return writeResult(res, result.result.status, result.result.message)
+  })
 })
 
 app.post('/api/add-entry', function(req, res){

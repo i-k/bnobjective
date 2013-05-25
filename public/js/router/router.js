@@ -11,6 +11,7 @@ define([
   'view/registerView',
   'model/item',
   'collection/itemCollection',
+  'lib/jquery.cookie'
 ],
 
   function(Settings, $, _, Backbone, ObjectivesView, ObjectiveDetailsView, NewObjectiveView,
@@ -30,9 +31,10 @@ define([
 
     itemCollection: new ItemCollection(),
 
-    session: null,
+    session: new Item(),
 
     initialize: function(){
+      var self = this
       $.support.cors = true
       $.ajaxSetup({cache: false}) // For Internet Explorer. If this is not set, all Ajax-requests hit the cache.
 
@@ -46,9 +48,29 @@ define([
       // TODO: can we rather use: app.views instead of global variable?
       window.views = [] // to manage views and prevent them from turning into zombies.
 
-      session = new Item()
-      session.set({user: null, auth_token: null})
-      var menuView = new MenuView({model: session})
+      var cookieSession = $.cookie(Settings.bnauth.appName + '.session')
+        , cookieSessionObj = {}
+
+       try {
+         if (cookieSession && cookieSession.length > 0)
+           cookieSessionObj = JSON.parse(cookieSession)
+       } catch(err){
+         console.log('Error parsing the cookieSession into Json-object')
+       }
+
+      if (typeof cookieSessionObj.access_token === 'undefined')
+        self.session.set({user: null,
+                          auth_token: null,
+                          user_roles: null})
+      else
+        self.session.set({user: cookieSessionObj.username,
+                          auth_token: cookieSessionObj.access_token,
+                          user_roles: cookieSessionObj.user_roles})
+
+      console.log('Session: %o', self.session)
+
+      var menuView = new MenuView({model: self.session})
+      console.log('Rendering menu...')
       menuView.render()
       window.views.push(menuView)
     },
@@ -56,26 +78,26 @@ define([
     // if user is logged in, render list of objectives,
     // otherwise render frontpage.
     render: function(actions){
-      this.closeViews()
+      var self = this
+      this.closeViews() // closes other views but menu
       console.log('(Default) Route:', actions)
       $('#page-description').html('Kimppatsemppari')
-      if (session !== null){
-        if (session.get('user') !== null){
-          // TODO: fetch objectives for collection
-          console.log('USER INFO:')
-          console.log(session.get('user'))
-          this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
-          this.itemCollection.setSearchUserId(session.get('user'))
-          this.itemCollection.fetch()
-          var objectivesView = new ObjectivesView({collection: this.itemCollection})
-          objectivesView.render()
-          window.views.push(objectivesView)
-          $('#page-description').html('Tavoitteet')
-        } else {
-          var frontpageView = new FrontpageView()
-          frontpageView.render()
-          window.views.push(frontpageView) 
-        }
+      if (self.session.get('user') !== null) {
+        // TODO: fetch objectives for collection
+        console.log('USER INFO:')
+        console.log(self.session.get('user'))
+        this.itemCollection.setCredentials(self.session.get('user'), Settings.bnauth.appName, self.session.get('auth_token'))
+        this.itemCollection.setSearchUserId(self.session.get('user'))
+        this.itemCollection.fetch()
+        var objectivesView = new ObjectivesView({collection: this.itemCollection, sessionModel: this.session})
+        objectivesView.render()
+        window.views.push(objectivesView)
+        $('#page-description').html('Tavoitteet')
+      } else {
+        console.log('Rendering frontpage:')
+        var frontpageView = new FrontpageView()
+        frontpageView.render()
+        window.views.push(frontpageView) 
       }
     },
 
@@ -83,7 +105,7 @@ define([
       this.closeViews()
       console.log('Route: objective by identifier: ', id)
       $('#page-description').html('Tavoite: ' + id)
-      this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
+      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
       this.itemCollection.setId(id)
       this.itemCollection.setSearchUserId(session.get('user'))
       this.itemCollection.fetch()
@@ -99,20 +121,20 @@ define([
       $('#page-description').html('Uusi tavoite')
 
       if (typeof id !== 'undefined' && id !== null) {
-        this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
+        this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
         this.itemCollection.setId(id)
-        this.itemCollection.setSearchUserId(session.get('user'))
+        this.itemCollection.setSearchUserId(this.session.get('user'))
         this.itemCollection.fetch()
         $('#page-description').html('Muokkaa tavoitetta')
       } else {
-        this.itemCollection.setCredentials(session.get('user'), Settings.bnauth.appName, session.get('auth_token'))
+        this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
         this.itemCollection.setId(id)
-        this.itemCollection.setSearchUserId(session.get('user'))
+        this.itemCollection.setSearchUserId(this.session.get('user'))
         this.itemCollection.fetch()
       }
       console.log('RENDER:')
       console.log(this.itemCollection)
-      var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: session})
+      var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: this.session})
       newObjectiveView.render()
       window.views.push(newObjectiveView)
     },
