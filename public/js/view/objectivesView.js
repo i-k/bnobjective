@@ -1,3 +1,7 @@
+// TODO: somekind of logout/sessionManager -object. Logout and Login -functions should be placed there.
+//       If server responds "User is logged out" => then call Session.logout() => this should take the 
+//       user back to frontpage.
+
 define(['./../js/settings.js',
         'lib/handlebars', 
         'lib/backbone',
@@ -50,6 +54,11 @@ define(['./../js/settings.js',
       console.log(rows)
 
       rows.forEach(function(row){
+
+        $('#' + row._id + '-add-entry').on('click.common', function(){
+          $('#' + row._id + '-entry-details').toggle()
+        })
+
         $('#' + row._id + '-delete-objective').on('click.common', function(){
           if (confirm('Haluatko varmisti poistaa tämän tavoitteen?')) {
           $.ajax({

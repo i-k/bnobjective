@@ -16,7 +16,7 @@
             <table style="background: white;">
               <caption><h2>Tavoitteet</h2></caption>
               <thead>
-                <th>Nimi</th>
+                <th>Tavoite</th>
                 <th>Kuvaus</th>
                 <th>Päättyy</th>
                 <th>Kirjauksia</th>
@@ -33,6 +33,12 @@
                     <a id="{{this._id}}-edit-objective" title="Muokkaa tavoitetta" class="btn" href=".#/update-objective/{{this._id}}"><i class="icon-edit"></i></a>
                     <a id="{{this._id}}-delete-objective" title="Poista tavoite" class="btn"><i class="icon-trash"></i></a>
                     <a id="{{this._id}}-add-entry" class="btn btn-primary"><i class="icon-check icon-white"></i> Tee kirjaus</a>
+                    <div id="{{this._id}}-entry-details" style="display: none;">
+                      <h4>Kirjauksen tiedot</h4>
+                      {{this.entryTitleText}}
+                      {{#if this.entryUnitOfMeasure}}<input class="input-small" type="number" max={{this.entryMaxAmount}} min={{this.entryMinAmount}}></input> {{this.entryUnitOfMeasure}}{{/if}}
+                      <a id="{{this._id}}-save-entry" class="btn btn-primary"><i class="icon-check icon-white"></i> Tallenna</a>
+                    </div>
                   </td>
                 </tr>
                 {{/each}}
