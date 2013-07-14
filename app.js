@@ -366,20 +366,15 @@ app.get('/api/objectives', function(req, res){
   })
 })
 
-app.get('/api/objectives/:objectiveId/entries', function(req, res){
-  // possible params: by tags, by active -status
-  return writeResult(res, 200, "TODO")
-})
+app.get('/api/objectives/:objectiveId/entries', TODORES);
 
-app.get('/api/objectives/:user/:objectiveId/entries', function(req, res){
-  // possible params: by tags, by active -status
-  return writeResult(res, 200, "TODO")
-})
+app.get('/api/objectives/:user/:objectiveId/entries', TODORES);
 
-app.get('/api/entries/:user', function(req, res){
-  // possible params: by success, by start date - end date
-  return writeResult(res, 200, "TODO")
-})
+app.get('/api/entries/:user', TODORES);
+// possible params: by success, by start date - end date
+function TODORES(req, res) {
+    return writeResult(res, 200, "TODO");
+}
 
 app.listen(settings.appPort)
 
