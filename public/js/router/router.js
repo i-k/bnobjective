@@ -4,7 +4,6 @@ define([
   'lib/underscore',
   'lib/backbone',
   'view/objectivesView',
-  'view/objectiveDetailsView',
   'view/newObjectiveView',
   'view/menuView',
   'view/frontpageView',
@@ -14,14 +13,13 @@ define([
   'lib/jquery.cookie'
 ],
 
-  function(Settings, $, _, Backbone, ObjectivesView, ObjectiveDetailsView, NewObjectiveView,
+  function(Settings, $, _, Backbone, ObjectivesView, NewObjectiveView,
            MenuView, FrontpageView, RegisterView, Item, ItemCollection){
 
   var AppRouter = Backbone.Router.extend({
 
     routes: {
       '': 'render',
-      'objectives/:identifier': 'renderObjectiveByIdentifier',
       'objectives': 'render',
       'new-objective': 'renderNewObjective',
       'update-objective/:id': 'renderNewObjective',
@@ -99,19 +97,6 @@ define([
         frontpageView.render()
         window.views.push(frontpageView) 
       }
-    },
-
-    renderObjectiveById: function(id){
-      this.closeViews()
-      console.log('Route: objective by identifier: ', id)
-      $('#page-description').html('Tavoite: ' + id)
-      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
-      this.itemCollection.setId(id)
-      this.itemCollection.setSearchUserId(session.get('user'))
-      this.itemCollection.fetch()
-      var objectiveDetailsView = new ObjectiveDetailsView({collection: this.itemCollection})
-      objectiveDetailsView.render()
-      window.views.push(objectiveDetailsView)
     },
 
     // new or update
