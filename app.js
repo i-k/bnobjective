@@ -83,8 +83,6 @@ function postObjective(req, res, username, application, sessionId) {
     , objectiveName = req.body.name
     , objectiveDescription = req.body.description
     , objectiveExpirationDate = req.body.expirationDate
-    , objectiveRecordInterval = req.body.recordInterval
-    , objectiveRecordWindow = req.body.recordWindow
     , objectiveTags = req.body.tags
     , objectiveIsPublic = req.body.isPublic
     , objectiveEntryTitleText = req.body.entryTitleText
@@ -102,10 +100,6 @@ function postObjective(req, res, username, application, sessionId) {
     return writeResult(res, 412, "Missing objective description")
   else if (typeof objectiveExpirationDate === 'undefined')
     return writeResult(res, 412, "Missing objective expiration date")
-  else if (typeof objectiveRecordInterval === 'undefined')
-    return writeResult(res, 412, "Missing objective record interval")
-  else if (typeof objectiveRecordWindow === 'undefined')
-    return writeResult(res, 412, "Missing objective record window")
   else if (typeof objectiveTags === 'undefined')
     return writeResult(res, 412, "Missing objective tags")
   else if (typeof objectiveIsPublic === 'undefined')
@@ -140,8 +134,6 @@ console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ',
           foundObjective.name = objectiveName,
           foundObjective.description = objectiveDescription,
           foundObjective.expirationDate = objectiveExpirationDate,
-          foundObjective.recordInterval = objectiveRecordInterval,
-          foundObjective.recordWindow = objectiveRecordWindow,
           foundObjective.tags = objectiveTags,
           foundObjective.isPublic = objectiveIsPublic,
           foundObjective.entryTitleText = objectiveEntryTitleText,
@@ -169,8 +161,6 @@ console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ',
                                          name: objectiveName,
                                          description: objectiveDescription,
                                          expirationDate: objectiveExpirationDate,
-                                         recordInterval: objectiveRecordInterval,
-                                         recordWindow: objectiveRecordWindow,
                                          tags: objectiveTags,
                                          isPublic: objectiveIsPublic,
                                          entryTitleText: objectiveEntryTitleText,

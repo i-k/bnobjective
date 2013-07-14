@@ -7,22 +7,6 @@ function initObjective(mongoose, settings) {
         name: String,
         description: String,
         expirationDate: Date, // leave null if objective is not meant to expire
-        recordInterval: {
-          years: Number,
-          months: Number,
-          weeks: Number,
-          days: Number,
-          hours: Number,
-          minutes: Number
-        },
-        recordWindow: { // offset from recordInterval's deadline
-          years: Number,
-          months: Number,
-          weeks: Number,
-          days: Number,
-          hours: Number,
-          minutes: Number
-        },
         createdTimestamp: { type: Date, default: Date.now },
         changedTimestamp: Date, // set after e.g. changing objective's description
         tags: [String], // for searching public objectives
@@ -84,72 +68,6 @@ schema.path('description').validate(function (value) {
 schema.path('description').validate(function (value) {
   return value.length <= settings.maxObjectiveDescriptionLength
 }, 'Description too long for objective. Max ' + settings.maxObjectiveDescriptionLength + ' characters.')
-
-schema.path('recordInterval.years').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-
-  var years = parseInt(value)
-  if ( isNaN(years) === true || years > 2)
-    return false
-  else
-    return true
-}, 'Record interval has missing or invalid years-value.')
-
-schema.path('recordInterval.months').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-
-  var months = parseInt(value)
-  if ( isNaN(months) === true || months > 12)
-    return false
-  else
-    return true
-}, 'Record interval has missing or invalid months-value.')
-
-schema.path('recordInterval.weeks').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-
-  var weeks = parseInt(value)
-  if ( isNaN(weeks) === true || weeks > 4)
-    return false
-  else
-    return true
-}, 'Record interval has missing or invalid weeks-value.')
-
-schema.path('recordInterval.days').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-
-  var days = parseInt(value)
-  if ( isNaN(days) === true || days > 31)
-    return false
-  else
-    return true
-}, 'Record interval has missing or invalid days-value.')
-
-schema.path('recordInterval.hours').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-
-  var hours = parseInt(value)
-  if ( isNaN(hours) === true || hours > 24)
-    return false
-  else
-    return true
-}, 'Record interval has missing or invalid hours-value.')
-
-schema.path('recordInterval.minutes').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-
-  var minutes = parseInt(value)
-  if ( isNaN(minutes) === true || minutes > 12)
-    return false
-  else
-    return true
-}, 'Record interval has missing or invalid minutes-value.')
 
 schema.path('tags').validate(function (value) {
   return value instanceof Array
