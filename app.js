@@ -211,123 +211,30 @@ app.post('/api/remove-objective', function(req, res){
 
   if (typeof id === 'undefined')
     return writeResult(res, 412, "Missing id")
-  else if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  validateUser(username, application, sessionId, function(result){
-    if (result.result.message === 'validated'){
-      console.log("Validated")
-
-      Objective.remove({_id: id}, function(err){
-        if (!err)
-          return writeResult(res, 200, "success")
-        else
-          return writeResult(res, 500, err)
-      })
-    } else
-      return writeResult(res, result.result.status, result.result.message)
-  })
-})
-
-app.post('/api/add-entry', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-
-  if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  return writeResult(res, 200, "TODO")
-
-})
-
-app.post('/api/remove-entry', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-
-  if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  return writeResult(res, 200, "TODO")
-
-})
-
-app.post('/api/update-entry', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-
-  if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  return writeResult(res, 200, "TODO")
-
-})
-
-app.post('/api/add-host', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-
-  if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  return writeResult(res, 200, "TODO")
-
-})
-
-app.post('/api/remove-host', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-
-  if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  return writeResult(res, 200, "TODO")
-
-})
-
-app.post('/api/update-host', function(req, res){
-  var username = req.body.uid
-  var application = req.body.app
-  var sessionId = req.body.sid
-
-  if (typeof username === 'undefined') 
-    return writeResult(res, 412, "Missing username")
-  else if (typeof application === 'undefined')
-    return writeResult(res, 412, "Missing application name: misconfigured?")
-  else if (typeof sessionId === 'undefined')
-    return writeResult(res, 412, "Missing session key: misconfigured?")
-
-  return writeResult(res, 200, "TODO")
-
-})
+  
+  return doWithValidUsernameAppSessionIdOrWriteErrorResult(
+    req.body,
+    res,
+    function(almostValid) { return validateUser(
+      almostValid.username,
+      almostValid.app,
+      almostValid.sessionId,
+      function(result){
+        if (result.result.message === 'validated'){
+          console.log("Validated")
+    
+          Objective.remove({_id: id}, function(err){
+            if (!err)
+              return writeResult(res, 200, "success")
+            else
+              return writeResult(res, 500, err)
+          })
+        } else
+          return writeResult(res, result.result.status, result.result.message)
+      }
+    ); }
+  );
+});
 
 app.get('/api/objectives', function(req, res){
   // TODO: by params: by tags, by active -status
@@ -356,24 +263,68 @@ app.get('/api/objectives', function(req, res){
       console.log(queryObj)
 
       Objective.find(queryObj, function(err, foundObjectives){
-        if (foundObjectives)
-          return writeResult(res, 200, "success", foundObjectives)
-        else
-          return writeResult(res, 200, "success", [])
+        return writeResult(res, 200, "success", foundObjectives || [])
       })
     } else
       return writeResult(res, 412, result.result.message)
   })
 })
 
-app.get('/api/objectives/:objectiveId/entries', TODORES);
+// endpoints to TODO
+var todoWithChecks = ["add-entry", "remove-entry", "update-entry", "add-host", "remove-host", "update-host"];
+todoWithChecks.forEach(function(url) {
+  app.post("/api/" + url, TODORESWITHCHECKS);
+});
 
-app.get('/api/objectives/:user/:objectiveId/entries', TODORES);
+// endpoints to TODO
+var todos = ["objectives/:objectiveId/entries", "objectives/:user/:objectiveId/entries", "/api/entries/:user"];
+todos.forEach(function(url) {
+  app.get("/api/" + url, TODORES);
+});
 
-app.get('/api/entries/:user', TODORES);
+// the TODO-funcs below are simple placeholders for the actual code
 // possible params: by success, by start date - end date
 function TODORES(req, res) {
     return writeResult(res, 200, "TODO");
+}
+
+function TODORESWITHCHECKS(req, res) {
+  return doWithValidUsernameAppSessionIdOrWriteErrorResult(req.body, res, function() {
+      return TODORES(req, res);
+  });
+}
+
+function doWithValidUsernameAppSessionIdOrWriteErrorResult(body, res, doWithValid) {
+  var userAppSess = new UsernameAppSessionId(body);
+  
+  if(userAppSess.validate()) {
+    return doWithValid(userAppSess);
+  } else
+    return writeResult(res, 412, userAppSess.errors.toString());
+}
+// returns a Prototype for a validatable body.uid, body.app and body.sid
+// After calling .validate() the object will have the possible validation errors in .errors
+// TODO: Move into start of validateUser?
+function UsernameAppSessionId(body) {
+  var self = this,
+      members,
+      errCodes;
+  self.username = body.uid;
+  self.app = body.app;
+  self.sessionId = body.sid;
+  self.errors = [];
+  
+  members = [self.username, self.app, self.sessionId];
+  errCodes = ["username", "application name: misconfigured?", "session key: misconfigured?"].map(function(e) {
+    return "Missing " + e;
+  });
+  
+  self.validate = function() {
+    self.errors = members.filter(function(m) { return !m; }).map(function(m, i) {
+        return errCodes[i];
+    });
+    return self.errors.length === 0;
+  };
 }
 
 app.listen(settings.appPort)
