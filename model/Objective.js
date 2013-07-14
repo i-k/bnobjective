@@ -60,13 +60,9 @@ schema.path('name').validate(function (value) {
 
 schema.path('description').validate(function (value) {
   if (typeof value === 'undefined')
-    return false
+    return true
   else
-    return value.length >= 0
-}, 'Objective description is missing.')
-
-schema.path('description').validate(function (value) {
-  return value.length <= settings.maxObjectiveDescriptionLength
+    return value.length <= settings.maxObjectiveDescriptionLength
 }, 'Description too long for objective. Max ' + settings.maxObjectiveDescriptionLength + ' characters.')
 
 schema.path('tags').validate(function (value) {

@@ -96,8 +96,6 @@ function postObjective(req, res, username, application, sessionId) {
 
   if (typeof objectiveName === 'undefined')
     return writeResult(res, 412, "Missing objective name")
-  else if (typeof objectiveDescription === 'undefined')
-    return writeResult(res, 412, "Missing objective description")
   else if (typeof objectiveExpirationDate === 'undefined')
     return writeResult(res, 412, "Missing objective expiration date")
   else if (typeof objectiveTags === 'undefined')
@@ -117,15 +115,17 @@ function postObjective(req, res, username, application, sessionId) {
   else if (typeof objectiveEntrySuccessMaxAmount === 'undefined')
     return writeResult(res, 412, "Missing objective entry success max amount")
 
+  if (objectiveDescription === 'undefined')
+    objectiveDescription = ""
 
 console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ', ' + objectiveName + 
-            ', ' + objectiveDescription + ', ' + objectiveExpirationDate)
+            ', ' + objectiveExpirationDate)
 
   validateUser(username, application, sessionId, function(result){
     if (result.result.message === 'validated'){
       console.log("Validated")
-      
-      // TODO: find existing objective:
+
+      // find existing objective:
       Objective.findOne({_id: id, username: username, application: application}, function(err, foundObjective){
         if (foundObjective){
           // update existing
@@ -185,7 +185,6 @@ console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ',
 
         }
       })
-      
 	  
     } else
       return writeResult(res, result.result.status, result.result.message)
@@ -260,12 +259,12 @@ app.get('/api/objectives', function(req, res){
 // runs the given function if .uid, .sid and .app can be found from body.
 // writes 412 with the errors if any one of them are missing
 function doWithValidUsernameAppSessionIdOrWriteErrorResult(body, res, doWithValid) {
-  var userAppSess = new UsernameAppSessionId(body);
+  var userAppSess = new UsernameAppSessionId(body)
   
-  if(userAppSess.validate()) {
-    return doWithValid(userAppSess);
+  if (userAppSess.validate()) {
+    return doWithValid(userAppSess)
   } else
-    return writeResult(res, 412, userAppSess.errors.toString());
+    return writeResult(res, 412, userAppSess.errors.toString())
 }
 // returns a Prototype for a validatable body.uid, body.app and body.sid
 // After calling .validate() the object will have the possible validation errors in .errors
@@ -274,22 +273,22 @@ function UsernameAppSessionId(body) {
   var self = this,
       members,
       errCodes;
-  self.username = body.uid;
-  self.app = body.app;
-  self.sessionId = body.sid;
-  self.errors = [];
+  self.username = body.uid
+  self.app = body.app
+  self.sessionId = body.sid
+  self.errors = []
   
-  members = [self.username, self.app, self.sessionId];
+  members = [self.username, self.app, self.sessionId]
   errCodes = ["username", "application name: misconfigured?", "session key: misconfigured?"].map(function(e) {
-    return "Missing " + e;
-  });
-  
+    return "Missing " + e
+  })
+
   self.validate = function() {
     self.errors = members.filter(function(m) { return !m; }).map(function(m, i) {
-        return errCodes[i];
-    });
-    return self.errors.length === 0;
-  };
+        return errCodes[i]
+    })
+    return self.errors.length === 0
+  }
 }
 
 // endpoints to TODO
