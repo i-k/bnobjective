@@ -9,6 +9,11 @@
  *   -expirationDate is not set up correctly when updating objective => fix this
  *   -at times c9 returns app not running html as result-param of validateUser =>
  *    add checks for existence of result.result.message etc
+ *
+ *   -now that the interval has been removed, no yes/no -question is needed.
+ *    Only record the entry.
+ *
+ *   -agreed with i-k to setup predefined objectives.
  */
 
 var express = require('express'),
@@ -76,7 +81,7 @@ app.post('/api/objective', function(req, res){
     }
   );
 });
-  
+
 function postObjective(req, res, username, application, sessionId) {
   
   var id = req.body.id // if id is not null then update, otherwise add new
@@ -255,6 +260,84 @@ app.get('/api/objectives', function(req, res){
       return writeResult(res, 412, result.result.message)
   })
 })
+
+app.post('/api/entry', function(req, res){
+  return doWithValidUsernameAppSessionIdOrWriteErrorResult(
+    req.body,
+    res,
+    function(almostValid) {
+      return postEntry(req, res, almostValid.username, almostValid.app, almostValid.sessionId)
+    }
+  )
+})
+
+function postEntry(req, res, username, application, sessionId) {
+  
+  var entryObjectiveId = req.body.objectiveId
+    , entryComments = req.body.comments
+    , entryAmount = req.body.amount
+
+  if (typeof entryObjectiveId === 'undefined')
+    return writeResult(res, 412, "Missing entry objective id")
+
+  validateUser(username, application, sessionId, function(result){
+    if (result.result.message === 'validated'){
+      console.log("Validated")
+
+      // find existing objective:
+      Objective.findOne({_id: entryObjectiveId, username: username, application: application}, function(err, foundObjective){
+        if (foundObjective){
+          // check that objective belongs to given user, so new entry can be attached into it:
+          if (foundObjective.username === username){
+
+            var entrySuccess = true
+            
+            // check if we expect numerical amount:
+            if (foundObjective.entryUnitOfMeasure.length >= 1){
+              if (typeof entryAmount === 'undefined')
+                return writeResult(res, 412, "Missing entry amount")
+              else if (parseInt(entryAmount) === 'NaN')
+                return writeResult(res, 412, "Invalid entry amount")
+              // TODO: check allowed lower and upper bounds
+              
+              if (foundObjective.entrySuccessMinAmount <= entryAmount &&
+                  foundObjective.entrySuccessMaxAmount >= entryAmount)
+                entrySuccess = true
+              else
+                entrySuccess = false
+            } else {
+              entryAmount = 0
+            }
+            // create new entry
+            var newEntry = new Entry({ application: application,
+                                       username: username,
+                                       objectiveId: entryObjectiveId,
+                                       comment: entryComments,
+                                       success: entrySuccess,
+                                       amount: entryAmount,
+                                       createdTimestamp: new Date(),
+                                       changedTimestamp: new Date()
+                           })
+
+            newEntry.save(function(err){
+              if (err){
+                console.log('An error occured')
+                return writeResult(res, 500, "Error: " + err)
+              } else
+                return writeResult(res, 201, "Entry added", newEntry)
+            })
+            
+          }          
+        } else {
+          return writeResult(res, 412, "Could not find the objective!")
+        }
+      })
+      
+    } else // user not validated
+      return writeResult(res, result.result.status, result.result.message)
+  })
+
+}
 
 // runs the given function if .uid, .sid and .app can be found from body.
 // writes 412 with the errors if any one of them are missing

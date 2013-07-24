@@ -34,7 +34,7 @@
                     <div id="{{this._id}}-entry-details" style="display: none;">
                       <h4>Kirjauksen tiedot</h4>
                       {{this.entryTitleText}}
-                      {{#if this.entryUnitOfMeasure}}<input class="input-small" type="number" max={{this.entryMaxAmount}} min={{this.entryMinAmount}}></input> {{this.entryUnitOfMeasure}}{{/if}}
+                      {{#if this.entryUnitOfMeasure}}<input id="{{this._id}}-entry-uom" class="input-small" type="number" max={{this.entryMaxAmount}} min={{this.entryMinAmount}}></input> {{this.entryUnitOfMeasure}}{{/if}}
                       <a id="{{this._id}}-save-entry" class="btn btn-primary"><i class="icon-check icon-white"></i> Tallenna</a>
                     </div>
                   </td>

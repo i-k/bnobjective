@@ -8,7 +8,7 @@ function initEntry(mongoose, settings) {
 // user records this on given interval. If no success is given with entry, the amount -field needs
 // to be filled. Success will then be deduced from entrySuccessMin/MaxAmount -values 
 // that are set in the objective. If these are not set, then an error is returned
-        success: Boolean,
+        success: Boolean, // TODO: is this needed anymore?
         comments: String,
 // Objective can be numerical, therefore BNObjective must be able to record numerical 
 // values for each entry. E.g. how many kilos you lost weight this month,

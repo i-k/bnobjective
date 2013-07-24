@@ -20,12 +20,6 @@ define(['./../js/settings.js',
       _.bindAll(this, 'render')
       this.sessionModel = options.sessionModel
       this.collection.on('all', this.render)
-
-      Handlebars.registerHelper('proto', function() {
-        if(typeof this != 'undefined'){
-          return this.test_field + 1
-        }
-      })
     },
 
     close: function(){
@@ -59,8 +53,52 @@ define(['./../js/settings.js',
           $('#' + row._id + '-entry-details').toggle()
         })
 
+        $('#' + row._id + '-save-entry').on('click.common', function(){
+          var entryAmount = $('#' + row._id + '-entry-uom').val()
+
+          if (parseInt(entryAmount) === 'NaN')
+            entryAmount = 0
+
+          if (confirm('Haluatko varmasti lisätä kirjauksen?')) {
+          $.ajax({
+            type: "POST",
+            url: Settings.bnobjective.addEntryUrl,
+            data: {
+              uid: self.sessionModel.get('user'),
+              app: Settings.bnauth.appName,
+              sid: self.sessionModel.get('auth_token'),
+              objectiveId: row._id,
+              amount: entryAmount
+            },
+            success: function(result){
+              console.log(result);
+              if(result.result.status < 300){
+                $('#messages').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">x</button><p>Kirjaus lisätty</p></div>')
+                window.scrollTo(0,0)
+                self.collection.fetch()
+              } else {
+                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + result.result.message + '</p></div>')
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+              if (jqXHR.responseText === '')
+                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>Could not connect to service-backend!</p></div>')
+              else {
+                try {
+                  var respObj = JSON.parse(jqXHR.responseText)
+                  $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + respObj.result.message + '</p></div>')
+                } catch (err){
+                  $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + err + '</p></div>')
+                }
+              }
+            },
+            dataType: 'json'
+          })
+          }
+        })
+
         $('#' + row._id + '-delete-objective').on('click.common', function(){
-          if (confirm('Haluatko varmisti poistaa tämän tavoitteen?')) {
+          if (confirm('Haluatko varmasti poistaa tämän tavoitteen?')) {
           $.ajax({
             type: "POST",
             url: Settings.bnobjective.removeObjectiveUrl,

@@ -5,7 +5,7 @@ function initObjective(mongoose, settings) {
         application: String, // used for BNAuth
         username: String, // used for BNAuth. User who created and owns this objective.
         name: String,
-        description: String,
+        description: String, // optional, not used currently in the user interface.
         expirationDate: Date, // leave null if objective is not meant to expire
         createdTimestamp: { type: Date, default: Date.now },
         changedTimestamp: Date, // set after e.g. changing objective's description
@@ -28,7 +28,7 @@ function initObjective(mongoose, settings) {
           password: String, // Sha256 hashed!
           users: [String] // BNAuth is used to validate user if he/she tries to create entry for objective
         }],
-        awardsAndRanks: {
+        awardsAndRanks: { // not used currently: set as null
           sequentialSuccessEntries: [{
                amount: Number, // e.g. 10 sequential entries
                awardName: String, // '10 päivää tupakoimatta'
