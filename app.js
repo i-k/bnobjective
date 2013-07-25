@@ -213,7 +213,9 @@ app.post('/api/remove-objective', function(req, res){
       function(result){
         if (result.result.message === 'validated'){
           console.log("Validated")
-    
+          Entry.remove({objectiveId: id, username: almostValid.username, application: almostValid.app}, function(err){
+            // No-op
+          })
           Objective.remove({_id: id}, function(err){
             if (!err)
               return writeResult(res, 200, "success")
@@ -254,7 +256,24 @@ app.get('/api/objectives', function(req, res){
       console.log(queryObj)
 
       Objective.find(queryObj, function(err, foundObjectives){
-        return writeResult(res, 200, "success", foundObjectives || [])
+        // TODO: for each found objective, attach the related entries:
+        var timesReturned = 0
+          , result = new Array()
+
+        foundObjectives.forEach(function(foundObjective){
+          console.log('Searching for entry that has objective id: ' + foundObjective._id)
+          Entry.find({objectiveId: foundObjective._id, username: searchUsername, application: appName},
+                     function(err, foundEntries){
+                       console.log('FOUND ENTRIES: %o', foundEntries)
+                       foundObjective.entries = foundEntries
+                       result.push(foundObjective)
+                       timesReturned += 1
+                       if (timesReturned >= foundObjectives.length){
+                         console.log('Returning: %o', result)
+                         return writeResult(res, 200, "success", result || [])
+                       }
+                     })
+        })
       })
     } else
       return writeResult(res, 412, result.result.message)
@@ -271,8 +290,7 @@ app.post('/api/entry', function(req, res){
   )
 })
 
-function postEntry(req, res, username, application, sessionId) {
-  
+function postEntry(req, res, username, application, sessionId) {  
   var entryObjectiveId = req.body.objectiveId
     , entryComments = req.body.comments
     , entryAmount = req.body.amount
@@ -336,7 +354,6 @@ function postEntry(req, res, username, application, sessionId) {
     } else // user not validated
       return writeResult(res, result.result.status, result.result.message)
   })
-
 }
 
 // runs the given function if .uid, .sid and .app can be found from body.
