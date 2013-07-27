@@ -16,7 +16,7 @@ function Settings(){
 
   this.appPort = process.env.PORT,
   this.mongoHost = getMongoHostFromSettingsPathOr('./mongoSettings.js', 'localhost'),
-  this.bnAuthUrl = 'http://bnauth.artiee.c9.io/api/auth',
+  this.bnAuthUrl = 'http://bnauth.artiee.c9.io/api/auth', //"http://localhost:8081/api/auth"
   this.maxAmountOfTagsPerObjective = 10,
   this.maxTagLength = 50,
   this.maxObjectiveDescriptionLength = 20000,

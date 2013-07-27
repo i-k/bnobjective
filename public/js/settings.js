@@ -1,20 +1,21 @@
 define(function(){
 
   var Settings = function(){
-
+    var authBase = "http://bnauth.artiee.c9.io/api/" //"http://localhost:8081/api/"; 
+    
     // This is the base-URL for Node.js -based API:
-    this.baseUrl = "http://bnobjective.artiee.c9.io/",
+    this.baseUrl = "http://bnobjective.artiee.c9.io/api/", //"http://localhost:8080/api/"
     this.bnauth = {},
     this.bnobjective = {},
     this.bnauth.appName = "kimppatsemppari",
-    this.bnauth.loginTokenUrl = 'http://bnauth.artiee.c9.io/api/login_token',
-    this.bnauth.loginUrl = 'http://bnauth.artiee.c9.io/api/login',
-    this.bnauth.logoutUrl = 'http://bnauth.artiee.c9.io/api/logout',
-    this.bnauth.registerUrl = 'http://bnauth.artiee.c9.io/api/register',
-    this.bnobjective.removeObjectiveUrl = 'http://bnobjective.artiee.c9.io/api/remove-objective',
-    this.bnobjective.addOrUpdateObjective = 'http://bnobjective.artiee.c9.io/api/objective',
-    this.bnobjective.objectives = 'http://bnobjective.artiee.c9.io/api/objectives',
-    this.bnobjective.addEntryUrl = 'http://bnobjective.artiee.c9.io/api/entry'
+    this.bnauth.loginTokenUrl = authBase + "login_token",
+    this.bnauth.loginUrl = authBase + "login",
+    this.bnauth.logoutUrl = authBase + "logout",
+    this.bnauth.registerUrl = authBase + "register",
+    this.bnobjective.removeObjectiveUrl = this.baseUrl + "remove-objective",
+    this.bnobjective.addOrUpdateObjective = this.baseUrl + "objective",
+    this.bnobjective.objectives = this.baseUrl + "objectives",
+    this.bnobjective.addEntryUrl = this.baseUrl + "entry"
   }
 
   return new Settings()

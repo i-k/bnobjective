@@ -5,7 +5,7 @@ define(['./../js/settings.js',
         'model/item'], function (Settings, $, Backbone, _, Item) {
 
   var itemCollection = Backbone.Collection.extend({
-    url: Settings.baseUrl + 'api/objectives', // default url when loading this first time
+    url: Settings.baseUrl + 'objectives', // default url when loading this first time
     model: Item,
     parse: function(items){
       // console.log('parsing...%o' , items)
@@ -19,7 +19,7 @@ define(['./../js/settings.js',
       return parsedModels
     },
     setCredentials: function(username, appName, sessionId){
-      this.url = Settings.baseUrl + 'api/objectives'
+      this.url = Settings.baseUrl + 'objectives'
       this.url = this.url + '?uid=' + username + '&app=' + appName + '&sid=' + sessionId
       console.log("Url is now: " + this.url)
     },
