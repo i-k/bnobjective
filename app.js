@@ -237,41 +237,37 @@ app.get('/api/objectives', function(req, res){
     , searchUsername = req.query["suid"]
 
   validateUser(username, appName, sessionId, function(result){
-    console.log("validateUser: " + result);
     if (result.result.message === 'validated'){
-      console.log("Validated")
       
-      var queryObj = {
-                      username: searchUsername
-                     }      
+      var query = {
+        username: searchUsername
+      }
 
-      if (typeof id !== 'undefined')
-        queryObj._id = id
+      if(id) {
+        console.log("setting _id to " + id)
+        query._id = id
+      }
+      
+      if(username !== searchUsername)
+        query.isPublic = true // isPublic = false doesn't seem to work 
 
-      if (username !== searchUsername)
-        queryObj.isPublic = true
-
-      console.log(queryObj)
-
-      Objective.find(queryObj, function(err, foundObjectives){
+      Objective.find(query, function(err, foundObjectives) {
         // TODO: for each found objective, attach the related entries:
-        var timesReturned = 0
-          , result = new Array()
-
-        foundObjectives.forEach(function(foundObjective){
-          console.log('Searching for entry that has objective id: ' + foundObjective._id)
-          Entry.find({objectiveId: foundObjective._id},
-                     function(err, foundEntries){
-                       console.log('FOUND ENTRIES: %o', foundEntries)
-                       foundObjective.entries = foundEntries
-                       result.push(foundObjective)
-                       timesReturned += 1
-                       if (timesReturned >= foundObjectives.length){
-                         console.log('Returning: %o', result)
-                         return writeResult(res, 200, "success", result || [])
-                       }
-                     })
-        })
+        if(err)
+          console.log(err);
+        else console.log("Objectives found: " + foundObjectives.length);
+        if(foundObjectives) {
+          return writeResult(res, 200, "success", foundObjectives.map(function(o) {
+            Entry.find(
+              { objectiveId: o._id },
+              function(err, entries) {
+                console.log("Entries found: " + entries.map(function(e) { return e.amount; }));
+                o.entries = entries;
+              }
+            );
+            return o;
+          }));
+        } else return writeResult(res, 412, err);
       })
     } else
       return writeResult(res, 412, result.result.message)

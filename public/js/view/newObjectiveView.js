@@ -6,6 +6,9 @@ define(['./../js/settings.js',
         'lib/jquery.fixheadertable'],
        function (Settings, Handlebars, Backbone, $, ItemTemplateSource) {
 
+//TODO: this.collection returns / contains all of the Objectives, so this view always thinks its editing a view
+//      so create own views for editing and creating, that extend a common super-view
+
   var newObjectiveView = Backbone.View.extend({
     el: $('#items'),
 
@@ -29,13 +32,13 @@ define(['./../js/settings.js',
       console.log('Rendering...' + event)
       var self = this
         , $el = this.$el
-        , items = { "item": this.collection.toJSON() }
+        , items = this.collection.toJSON()
+        , item;
 
-      console.log(items)
-
-      if (items.item.length > 0)
-        $el.html(this.itemTemplate(items.item[0]))
-      else
+      if (items.length > 0) {
+        item = items[0]
+        $el.html(this.itemTemplate(item))
+      } else
         $el.html(this.itemTemplate({}))
 
       // Enable tooltips:
@@ -49,16 +52,16 @@ define(['./../js/settings.js',
         $('#uomExtra').toggle()
       })
 
-      if (items.item.length > 0) {
+      if (item) {
         // Set value for recordInterval and recordWindow, if given:
-        $('#recordIntervalMonths option[value="' + items.item[0].recordInterval.months +'"]').prop("selected", true)
-        $('#recordIntervalWeeks option[value="' + items.item[0].recordInterval.weeks +'"]').prop("selected", true)
-        $('#recordIntervalDays option[value="' + items.item[0].recordInterval.days +'"]').prop("selected", true)
-        $('#recordIntervalHours option[value="' + items.item[0].recordInterval.hours +'"]').prop("selected", true)
-        $('#recordWindowMonths option[value="' + items.item[0].recordWindow.months +'"]').prop("selected", true)
-        $('#recordWindowWeeks option[value="' + items.item[0].recordWindow.weeks +'"]').prop("selected", true)
-        $('#recordWindowDays option[value="' + items.item[0].recordWindow.days +'"]').prop("selected", true)
-        $('#recordWindowHours option[value="' + items.item[0].recordWindow.hours +'"]').prop("selected", true)
+        $('#recordIntervalMonths option[value="' + item.recordInterval.months +'"]').prop("selected", true)
+        $('#recordIntervalWeeks option[value="' + item.recordInterval.weeks +'"]').prop("selected", true)
+        $('#recordIntervalDays option[value="' + item.recordInterval.days +'"]').prop("selected", true)
+        $('#recordIntervalHours option[value="' + item.recordInterval.hours +'"]').prop("selected", true)
+        $('#recordWindowMonths option[value="' + item.recordWindow.months +'"]').prop("selected", true)
+        $('#recordWindowWeeks option[value="' + item.recordWindow.weeks +'"]').prop("selected", true)
+        $('#recordWindowDays option[value="' + item.recordWindow.days +'"]').prop("selected", true)
+        $('#recordWindowHours option[value="' + item.recordWindow.hours +'"]').prop("selected", true)
       }
 
       $('#save').on('click.common', function(){
@@ -85,10 +88,9 @@ define(['./../js/settings.js',
            , isPublic = $('#isPublic').val()
            , id = null
 
-         var itemsTmp = self.collection.toJSON()
          // if updating existing objective, get the id (else send null, which creates a new objective):
-         if (itemsTmp.length > 0)
-           id = itemsTmp[0]._id
+         if (item)
+           id = item._id
          
          $.ajax({
           type: "POST",

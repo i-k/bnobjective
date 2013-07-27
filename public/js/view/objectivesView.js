@@ -29,22 +29,14 @@ define(['./../js/settings.js',
 
     itemTemplate: Handlebars.compile(ItemTemplateSource),
 
-    test: function(event){
-      console.log(event)
-    },
-
     render: function(event){
-      var self = this
-      console.log('Rendering...' + event)
-      var $el = this.$el
-      console.log('collection: %o' , this.collection.toJSON())
-      var items = { "item": this.collection.toJSON() }
-      console.log(items)
+      var self = this,
+          $el = this.$el
+          rows = this.collection.toJSON(),
+          items = { "item": rows };
       $el.html(this.itemTemplate(items))
 
-      var rows = this.collection.toJSON()
-
-      console.log('ROWS')
+      console.log('render objectivesView')
       console.log(rows)
 
       rows.forEach(function(row){
@@ -58,88 +50,80 @@ define(['./../js/settings.js',
 
           if (parseInt(entryAmount) === 'NaN')
             entryAmount = 0
-
-          if (confirm('Haluatko varmasti lisätä kirjauksen?')) {
-          $.ajax({
-            type: "POST",
-            url: Settings.bnobjective.addEntryUrl,
-            data: {
-              uid: self.sessionModel.get('user'),
-              app: Settings.bnauth.appName,
-              sid: self.sessionModel.get('auth_token'),
+            
+          bnPost(
+            Settings.bnobjective.addEntryUrl,
+            self.sessionModel,
+            { 
               objectiveId: row._id,
               amount: entryAmount
             },
-            success: function(result){
-              console.log(result);
-              if(result.result.status < 300){
-                $('#messages').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">x</button><p>Kirjaus lisätty</p></div>')
-                window.scrollTo(0,0)
-                self.collection.fetch()
-              } else {
-                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + result.result.message + '</p></div>')
-              }
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-              if (jqXHR.responseText === '')
-                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>Could not connect to service-backend!</p></div>')
-              else {
-                try {
-                  var respObj = JSON.parse(jqXHR.responseText)
-                  $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + respObj.result.message + '</p></div>')
-                } catch (err){
-                  $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + err + '</p></div>')
-                }
-              }
-            },
-            dataType: 'json'
-          })
-          }
+            "Kirjaus lisätty",
+            self.collection
+          )
         })
 
         $('#' + row._id + '-delete-objective').on('click.common', function(){
           if (confirm('Haluatko varmasti poistaa tämän tavoitteen?')) {
-          $.ajax({
-            type: "POST",
-            url: Settings.bnobjective.removeObjectiveUrl,
-            data: {
-              id: row._id,
-              uid: self.sessionModel.get('user'),
-              app: Settings.bnauth.appName,
-              sid: self.sessionModel.get('auth_token')
-            },
-            success: function(result){
-              console.log(result);
-              if(result.result.status < 300){
-                $('#messages').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">x</button><p>Tavoite poistettu</p></div>')
-                window.scrollTo(0,0)
-                self.collection.fetch()
-              } else {
-                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + result.result.message + '</p></div>')
-              }
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-              if (jqXHR.responseText === '')
-                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>Could not connect to service-backend!</p></div>')
-              else {
-                try {
-                  var respObj = JSON.parse(jqXHR.responseText)
-                  $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + respObj.result.message + '</p></div>')
-                } catch (err){
-                  $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + err + '</p></div>')
-                }
-              }
-            },
-            dataType: 'json'
-          })
+            bnPost(
+              Settings.bnobjective.removeObjectiveUrl,
+              self.sessionModel,
+              { id: row._id, },
+              "Tavoite poistettu",
+              self.collection
+            )
           }
-        })  
+        })
       })
 
       return this
     }
-
+    
   })
+  //TODO: create a new Backbone-view with these added and extend it in the views 
+  function bnPost(url, sessionModel, data, succMsg, collection) { return $.ajax({
+    type: "POST",
+    url: url,
+    data: $.extend({
+      uid: sessionModel.get('user'),
+      app: Settings.bnauth.appName,
+      sid: sessionModel.get('auth_token')
+    }, data),
+    success: createSuccessHandler(succMsg, collection),
+    error: errorHandler,
+    dataType: 'json'
+  }); }
+  
+  function createSuccessHandler(succMsg, collection) {
+    return function(result) {
+      if(result.result.status < 300) {
+        successMsg(succMsg)
+        window.scrollTo(0,0)
+        collection.fetch()
+      } else 
+        errorMsg(result.result.message)
+    }
+  }
+  
+  function errorHandler(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.responseText === '')
+      errorMsg("Could not connect to service-backend!")
+    else {
+      try {
+        var respObj = JSON.parse(jqXHR.responseText)
+        errorMsg(respObj.result.message)
+      } catch (err) {
+        errorMsg(err)
+      }
+    }
+  }
+  
+  function msg(message, messageDivClass) {
+    $('#messages').html('<div class="alert alert-' + messageDivClass + '"><button type="button" class="close" data-dismiss="alert">x</button><p>' + message + '</p></div>');
+  }
+  
+  function errorMsg(message) { msg(message, "error"); }
+  function successMsg(message) { msg(message, "success"); }
   
   return objectivesView
 

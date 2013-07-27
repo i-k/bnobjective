@@ -18,7 +18,7 @@ function initEntry(mongoose, settings) {
   });
   
   schema.path('comments').validate(function (value) {
-      return value.length <= settings.maxEntryCommentsLength
+      return value && value.length <= settings.maxEntryCommentsLength
   }, 'Comments too long for entry. Max ' + settings.maxEntryCommentsLength + ' characters.');
 
   return mongoose.model('Entry', schema);

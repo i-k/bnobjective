@@ -100,24 +100,23 @@ define([
     },
 
     // new or update
-    renderNewObjective: function(id){
+    renderNewObjective: function(id) {
+      var user = this.session.get('user')
       this.closeViews()
-      console.log('Route: new-objective. Id: ' + id)
-      $('#page-description').html('Uusi tavoite')
-
-      if (typeof id !== 'undefined' && id !== null) {
-        this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
-        this.itemCollection.setId(id)
-        this.itemCollection.setSearchUserId(this.session.get('user'))
-        this.itemCollection.fetch()
+      console.log('Route: new-objective. Id: ' + id + " type: " + typeof(id))
+      
+      this.itemCollection.setCredentials(user, Settings.bnauth.appName, this.session.get('auth_token'))
+      this.itemCollection.setSearchUserId(user)
+      
+      if (id) {
         $('#page-description').html('Muokkaa tavoitetta')
-      } else {
-        this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
         this.itemCollection.setId(id)
-        this.itemCollection.setSearchUserId(this.session.get('user'))
-        this.itemCollection.fetch()
-      }
-      console.log('RENDER:')
+      } else 
+        $('#page-description').html('Uusi tavoite')
+      
+      this.itemCollection.fetch()
+      
+      console.log('renderNewObjective, itemCollectionSize: ' + this.itemCollection.length)
       console.log(this.itemCollection)
       var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: this.session})
       newObjectiveView.render()
