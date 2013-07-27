@@ -131,10 +131,9 @@ console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ',
       console.log("Validated")
 
       // find existing objective:
-      Objective.findOne({_id: id, username: username, application: application}, function(err, foundObjective){
+      Objective.findOne({_id: id, username: username}, function(err, foundObjective){
         if (foundObjective){
           // update existing
-          foundObjective.application = application,
           foundObjective.username = username,
           foundObjective.name = objectiveName,
           foundObjective.description = objectiveDescription,
@@ -161,7 +160,7 @@ console.log('GOT: ' + id + username + ', ' + application + ', ' + sessionId + ',
           
         } else {
           // create new
-            var newObjective = new Objective({ application: application,
+            var newObjective = new Objective({
                                          username: username,
                                          name: objectiveName,
                                          description: objectiveDescription,
@@ -213,7 +212,7 @@ app.post('/api/remove-objective', function(req, res){
       function(result){
         if (result.result.message === 'validated'){
           console.log("Validated")
-          Entry.remove({objectiveId: id, username: almostValid.username, application: almostValid.app}, function(err){
+          Entry.remove({ objectiveId: id }, function(err){
             // No-op
           })
           Objective.remove({_id: id}, function(err){
@@ -243,8 +242,7 @@ app.get('/api/objectives', function(req, res){
       console.log("Validated")
       
       var queryObj = {
-                      username: searchUsername,
-                      application: appName
+                      username: searchUsername
                      }      
 
       if (typeof id !== 'undefined')
@@ -262,7 +260,7 @@ app.get('/api/objectives', function(req, res){
 
         foundObjectives.forEach(function(foundObjective){
           console.log('Searching for entry that has objective id: ' + foundObjective._id)
-          Entry.find({objectiveId: foundObjective._id, username: searchUsername, application: appName},
+          Entry.find({objectiveId: foundObjective._id},
                      function(err, foundEntries){
                        console.log('FOUND ENTRIES: %o', foundEntries)
                        foundObjective.entries = foundEntries
@@ -303,7 +301,7 @@ function postEntry(req, res, username, application, sessionId) {
       console.log("Validated")
 
       // find existing objective:
-      Objective.findOne({_id: entryObjectiveId, username: username, application: application}, function(err, foundObjective){
+      Objective.findOne({_id: entryObjectiveId, username: username}, function(err, foundObjective){
         if (foundObjective){
           // check that objective belongs to given user, so new entry can be attached into it:
           if (foundObjective.username === username){
@@ -327,9 +325,7 @@ function postEntry(req, res, username, application, sessionId) {
               entryAmount = 0
             }
             // create new entry
-            var newEntry = new Entry({ application: application,
-                                       username: username,
-                                       objectiveId: entryObjectiveId,
+            var newEntry = new Entry({ objectiveId: entryObjectiveId,
                                        comment: entryComments,
                                        success: entrySuccess,
                                        amount: entryAmount,

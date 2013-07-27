@@ -2,8 +2,6 @@ module.exports = initEntry;
 
 function initEntry(mongoose, settings) {
   var schema = mongoose.Schema({
-        application: String, // used for BNAuth
-        username: String, // used for BNAuth
         objectiveId: String,
 // user records this on given interval. If no success is given with entry, the amount -field needs
 // to be filled. Success will then be deduced from entrySuccessMin/MaxAmount -values 

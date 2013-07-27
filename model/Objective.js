@@ -2,7 +2,6 @@ module.exports = initObjective;
 
 function initObjective(mongoose, settings) {
     var schema = mongoose.Schema({
-        application: String, // used for BNAuth
         username: String, // used for BNAuth. User who created and owns this objective.
         name: String,
         description: String, // optional, not used currently in the user interface.
