@@ -47,8 +47,6 @@ requirejs.config({
 define(['./router/router', './js/settings.js', './lib/jquery', './lib/bootstrap', 
        'lib/handlebars' /*, 'http://localhost:8080/socket.io/socket.io.js'*/],
   function(Router, Settings, $, Bootstrap, Handlebars /*, io*/) {
-    var self = this
-    console.log('TEST!')
 /*
     var socket = io.connect('http://localhost:8080')
     socket.on('news', function (data) {

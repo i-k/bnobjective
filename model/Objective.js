@@ -47,10 +47,7 @@ function initObjective(mongoose, settings) {
 // TODO: min lengths for fields also!
 
 schema.path('name').validate(function (value) {
-  if (typeof value === 'undefined')
-    return false
-  else
-    return value.length > 0
+  return value && value.length > 0
 }, 'Objective name is missing.')
 
 schema.path('name').validate(function (value) {
@@ -58,10 +55,7 @@ schema.path('name').validate(function (value) {
 }, 'Name too long for objective. Max ' + settings.maxObjectiveNameLength + ' characters.')
 
 schema.path('description').validate(function (value) {
-  if (typeof value === 'undefined')
-    return true
-  else
-    return value.length <= settings.maxObjectiveDescriptionLength
+  return !value || value.length <= settings.maxObjectiveDescriptionLength
 }, 'Description too long for objective. Max ' + settings.maxObjectiveDescriptionLength + ' characters.')
 
 schema.path('tags').validate(function (value) {
@@ -69,16 +63,13 @@ schema.path('tags').validate(function (value) {
 }, 'Malformed tags')
 
 schema.path('tags').validate(function (value) {
-  if (value instanceof Array)
-    value.length <= settings.maxAmountOfTagsPerObjective
+  return value.length <= settings.maxAmountOfTagsPerObjective
 }, 'Too many tags. Max ' + settings.maxAmountOfTagsPerObjective + ' tags.')
 
 schema.path('tags').validate(function (value) {
-  if (value instanceof Array)
-    value.forEach(function(tag){
-      if (tag.length > settings.maxTagLength)
-        return false
-    })
+  return value.every(function(tag) {
+    return tag.length <= settings.maxTagLength
+  })
 }, 'Some tag is too long. Tag max length ' + settings.maxTagLength + ' characters.');
 
   var Objective = mongoose.model('Objective', schema);
