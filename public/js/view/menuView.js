@@ -3,12 +3,13 @@ define(['./../js/settings.js',
         'lib/backbone',
         'lib/jquery',
         'lib/text!../../template/menuTemplate.hbs',
+        '../js/view/BnView.js',
         'lib/sha256',
         'lib/jquery.cookie'
        ],
-       function (Settings, Handlebars, Backbone, $, ItemTemplateSource) {
+       function (Settings, Handlebars, Backbone, $, ItemTemplateSource, ExtendBnView) {
 
-  var menuView = Backbone.View.extend({
+  var menuView = ExtendBnView({
     el: $('#menu'),
 
     initialize: function(){
@@ -44,25 +45,22 @@ define(['./../js/settings.js',
     itemTemplate: Handlebars.compile(ItemTemplateSource),
 
     render: function(event){
-      var self = this
       // Take care that no listener is bound twice:
       $('#main *').off("click.menu")
-      
-      console.log('Rendering...' + event)
-      var $el = this.$el
+
       console.log('model: %o' , this.model.toJSON())
       var sessionItem = this.model.toJSON()
-      console.log(items)
-      $el.html(this.itemTemplate(sessionItem))
+      this.$el.html(this.itemTemplate(sessionItem))
       
       // bind listeners:
-      self.bindLogin(this.model)
-      self.bindLogout(this.model)
+      this.bindLogin(this.model)
+      this.bindLogout(this.model)
 
       return this
     },
     
     bindLogin: function(model){
+      var self = this
       $('#login-menu').on('click.menu', function(){
 
         var password = $('#password-menu').val()
@@ -103,41 +101,19 @@ define(['./../js/settings.js',
                     $.cookie(Settings.bnauth.appName + '.session', bnSessionObj, { expires: 7 })
                     Backbone.history.navigate('#/objectives', {trigger: true})
                   } else {
-                    $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + result.result.message + '</p></div>')
+                    self.errorMsg(result.result.message)
                   }
                 },
-                error: function(jqXHR, textStatus, errorThrown){
-                  if (jqXHR.responseText === '')
-                    $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>Could not connect to auth-service backend!</p></div>')
-                  else {
-                    try {
-                      var respObj = JSON.parse(jqXHR.responseText)
-                      $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + respObj.result.message + '</p></div>')
-                    } catch (err){
-                      $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + err + '</p></div>')
-                    }
-                  }
-                },
+                error: self.errorHandler,
                 dataType: 'json'
               })
 
             } else {
               console.log("Couldn't retrieve login token! " + result.result.status)
-              $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + result.result.message + '</p></div>')
+              self.errorMsg(result.result.message)
             }
           },
-          error: function(jqXHR, textStatus, errorThrown){
-            if (jqXHR.responseText === '')
-              $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>Could not connect to auth-service backend!</p></div>')
-            else {
-              try {
-                var respObj = JSON.parse(jqXHR.responseText)
-                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + respObj.result.message + '</p></div>')
-              } catch (err){
-                $('#messages').html('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">x</button><p>' + err + '</p></div>')
-              }
-            }
-          },
+          error: self.errorHandler,
           dataType: 'json'
         })
 
@@ -150,6 +126,12 @@ define(['./../js/settings.js',
 
         var username = model.get('user')
           , sessionId = model.get('auth_token')
+          
+        function logOut() {
+          model.set({user: null, auth_token: null, user_roles: null})
+          $.removeCookie(Settings.bnauth.appName + '.session')
+          Backbone.history.navigate('#/', {trigger: true}) // go to frontpage after logging out
+        }
 
          $.ajax({
           type: "POST",
@@ -159,23 +141,8 @@ define(['./../js/settings.js',
             appName: Settings.bnauth.appName,
             session_id: sessionId
           },
-          success: function(result){
-            console.log(result)
-            if(result.result.status < 300){
-              model.set({user: null, auth_token: null, user_roles: null})
-              $.removeCookie(Settings.bnauth.appName + '.session')
-              Backbone.history.navigate('#/', {trigger: true}) // go to frontpage after logging out
-            } else {
-              model.set({user: null, auth_token: null, user_roles: null})
-              $.removeCookie(Settings.bnauth.appName + '.session')
-              Backbone.history.navigate('#/', {trigger: true}) // go to frontpage, user already logged out.
-            }
-          },
-          error: function(jqXHR, textStatus, errorThrown){
-            model.set({user: null, auth_token: null, user_roles: null})
-            $.removeCookie(Settings.bnauth.appName + '.session')
-            Backbone.history.navigate('#/', {trigger: true}) // go to frontpage, user already logged out.
-          },
+          success: logOut,
+          error: logOut,
           dataType: 'json'
         })
 

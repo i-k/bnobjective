@@ -7,10 +7,11 @@ define(['./../js/settings.js',
         'lib/backbone',
         'lib/jquery',
         'lib/text!../../template/objectivesTemplate.hbs',
+        '../js/view/BnView.js',
         'lib/jquery.fixheadertable'],
-       function (Settings, Handlebars, Backbone, $, ItemTemplateSource) {
+       function (Settings, Handlebars, Backbone, $, ItemTemplateSource, ExtendBnView) {
 
-  var objectivesView = Backbone.View.extend({
+  var objectivesView = ExtendBnView({
     el: $('#items'),
 
     sessionModel: null,
@@ -38,6 +39,11 @@ define(['./../js/settings.js',
 
       console.log('render objectivesView')
       console.log(rows)
+      
+      function onSuccess() {
+        window.scrollTo(0,0)
+        this.collection.fetch()
+      }
 
       rows.forEach(function(row){
 
@@ -51,7 +57,7 @@ define(['./../js/settings.js',
           if (parseInt(entryAmount) === 'NaN')
             entryAmount = 0
             
-          bnPost(
+          self.bnPost(
             Settings.bnobjective.addEntryUrl,
             self.sessionModel,
             { 
@@ -59,18 +65,18 @@ define(['./../js/settings.js',
               amount: entryAmount
             },
             "Kirjaus lisätty",
-            self.collection
+            onSuccess
           )
         })
 
         $('#' + row._id + '-delete-objective').on('click.common', function(){
           if (confirm('Haluatko varmasti poistaa tämän tavoitteen?')) {
-            bnPost(
+            self.bnPost(
               Settings.bnobjective.removeObjectiveUrl,
               self.sessionModel,
               { id: row._id, },
               "Tavoite poistettu",
-              self.collection
+              onSuccess
             )
           }
         })
@@ -80,50 +86,6 @@ define(['./../js/settings.js',
     }
     
   })
-  //TODO: create a new Backbone-view with these added and extend it in the views 
-  function bnPost(url, sessionModel, data, succMsg, collection) { return $.ajax({
-    type: "POST",
-    url: url,
-    data: $.extend({
-      uid: sessionModel.get('user'),
-      app: Settings.bnauth.appName,
-      sid: sessionModel.get('auth_token')
-    }, data),
-    success: createSuccessHandler(succMsg, collection),
-    error: errorHandler,
-    dataType: 'json'
-  }); }
-  
-  function createSuccessHandler(succMsg, collection) {
-    return function(result) {
-      if(result.result.status < 300) {
-        successMsg(succMsg)
-        window.scrollTo(0,0)
-        collection.fetch()
-      } else 
-        errorMsg(result.result.message)
-    }
-  }
-  
-  function errorHandler(jqXHR, textStatus, errorThrown) {
-    if (jqXHR.responseText === '')
-      errorMsg("Could not connect to service-backend!")
-    else {
-      try {
-        var respObj = JSON.parse(jqXHR.responseText)
-        errorMsg(respObj.result.message)
-      } catch (err) {
-        errorMsg(err)
-      }
-    }
-  }
-  
-  function msg(message, messageDivClass) {
-    $('#messages').html('<div class="alert alert-' + messageDivClass + '"><button type="button" class="close" data-dismiss="alert">x</button><p>' + message + '</p></div>');
-  }
-  
-  function errorMsg(message) { msg(message, "error"); }
-  function successMsg(message) { msg(message, "success"); }
   
   return objectivesView
 
