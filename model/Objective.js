@@ -40,7 +40,8 @@ function initObjective(mongoose, settings) {
               rank: String, // e.g. 'veteraani'
               users: [String] // users who have earned this rank
           }]
-        }
+        },
+        entries: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Entry' }] // gets replaced with actual objects when populate() is called
     });
 
 // TODO: add validations for each field

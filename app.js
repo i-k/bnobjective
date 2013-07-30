@@ -228,6 +228,11 @@ app.post('/api/remove-objective', function(req, res){
   );
 });
 
+
+/*TODO: own function to find a single objective so findOne can be used
+ *TODO: figure out why searching by id doesn't work with other params,
+ *      so others can't search for non-public objectives
+ */
 app.get('/api/objectives', function(req, res){
   // TODO: by params: by tags, by active -status
   var appName = req.query["app"]
@@ -239,36 +244,29 @@ app.get('/api/objectives', function(req, res){
   validateUser(username, appName, sessionId, function(result){
     if (result.result.message === 'validated'){
       
-      var query = {
-        username: searchUsername
-      }
+      var query;
 
       if(id) {
-        console.log("setting _id to " + id)
-        query._id = id
+        console.log("searching by id: " + id)
+        query = { _id: id }
+      } else {
+        query = { username: searchUsername }
+        if(username !== searchUsername)
+          query.isPublic = true
       }
       
-      if(username !== searchUsername)
-        query.isPublic = true // isPublic = false doesn't seem to work 
-
-      Objective.find(query, function(err, foundObjectives) {
-        // TODO: for each found objective, attach the related entries:
-        if(err)
-          console.log(err);
-        else console.log("Objectives found: " + foundObjectives.length);
-        if(foundObjectives) {
-          return writeResult(res, 200, "success", foundObjectives.map(function(o) {
-            Entry.find(
-              { objectiveId: o._id },
-              function(err, entries) {
-                console.log("Entries found: " + entries.map(function(e) { return e.amount; }));
-                o.entries = entries;
-              }
-            );
-            return o;
-          }));
-        } else return writeResult(res, 412, err);
-      })
+      Objective.find(query).
+        populate("entries").
+        exec(function(err, foundObjectives) {
+          // TODO: for each found objective, attach the related entries:
+          if(foundObjectives) {
+            console.log("Objectives found: " + foundObjectives.length);
+            return writeResult(res, 200, "success", foundObjectives);
+          } else {
+            console.log(err);
+            return writeResult(res, 412, err);
+          }
+        })
     } else
       return writeResult(res, 412, result.result.message)
   })
@@ -312,11 +310,9 @@ function postEntry(req, res, username, application, sessionId) {
                 return writeResult(res, 412, "Invalid entry amount")
               // TODO: check allowed lower and upper bounds
               
-              if (foundObjective.entrySuccessMinAmount <= entryAmount &&
-                  foundObjective.entrySuccessMaxAmount >= entryAmount)
-                entrySuccess = true
-              else
-                entrySuccess = false
+              entrySuccess = 
+                foundObjective.entrySuccessMinAmount <= entryAmount &&
+                foundObjective.entrySuccessMaxAmount >= entryAmount
             } else {
               entryAmount = 0
             }
@@ -331,10 +327,17 @@ function postEntry(req, res, username, application, sessionId) {
 
             newEntry.save(function(err){
               if (err){
-                console.log('An error occured')
+                console.log(err)
                 return writeResult(res, 500, "Error: " + err)
-              } else
-                return writeResult(res, 201, "Entry added", newEntry)
+              } else {
+                foundObjective.entries.push(newEntry.id)
+                foundObjective.save(function(e) {
+                  if(e)
+                    return writeResult(res, 500, "Error: " + e)
+                  else
+                    return writeResult(res, 201, "Entry added", newEntry)
+                })
+              }
             })
             
           }          

@@ -2,7 +2,6 @@ module.exports = initEntry;
 
 function initEntry(mongoose, settings) {
   var schema = mongoose.Schema({
-        objectiveId: String,
 // user records this on given interval. If no success is given with entry, the amount -field needs
 // to be filled. Success will then be deduced from entrySuccessMin/MaxAmount -values 
 // that are set in the objective. If these are not set, then an error is returned
