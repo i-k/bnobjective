@@ -38,15 +38,14 @@ define(['./../js/settings.js',
       $el.html(this.itemTemplate(items))
 
       console.log('render objectivesView')
-      console.log(rows)
       
       function onSuccess() {
         window.scrollTo(0,0)
-        this.collection.fetch()
+        self.collection.fetch()
       }
 
       rows.forEach(function(row){
-
+      console.log(row.name + ", entries: " + row.entries)
         $('#' + row._id + '-add-entry').on('click.common', function(){
           $('#' + row._id + '-entry-details').toggle()
         })
