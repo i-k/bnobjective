@@ -22,12 +22,21 @@ define([
       '': 'render',
       'objectives': 'render',
       'new-objective': 'renderNewObjective',
-      'update-objective/:id': 'renderNewObjective',
+      'update-objective/:id': 'renderEditObjective',
       'register': 'renderRegister',
       '*actions': 'render' // Default
     },
 
     itemCollection: new ItemCollection(),
+    
+    setUserCredentials: function() {
+      console.log("setUserCredentials")
+      this.itemCollection.setCredentials(this.session.get('user'), Settings.bnauth.appName, this.session.get('auth_token'))
+    },
+    
+    setSearchUserIdFromSession: function() {
+      this.itemCollection.setSearchUserId(this.session.get('user'))
+    },
 
     session: new Item(),
 
@@ -82,13 +91,10 @@ define([
       $('#page-description').html('Kimppatsemppari')
       if (self.session.get('user') !== null) {
         // TODO: fetch objectives for collection
-        console.log('USER INFO:')
-        console.log(self.session.get('user'))
-        this.itemCollection.setCredentials(self.session.get('user'), Settings.bnauth.appName, self.session.get('auth_token'))
-        this.itemCollection.setSearchUserId(self.session.get('user'))
+        this.setUserCredentials()
+        this.setSearchUserIdFromSession()
         this.itemCollection.fetch()
         var objectivesView = new ObjectivesView({collection: this.itemCollection, sessionModel: this.session})
-        objectivesView.render()
         window.views.push(objectivesView)
         $('#page-description').html('Tavoitteet')
       } else {
@@ -98,29 +104,41 @@ define([
         window.views.push(frontpageView) 
       }
     },
-
-    // new or update
-    renderNewObjective: function(id) {
-      var user = this.session.get('user')
+    
+    createNewOrEditObjectiveView: function(description) {
+      var view = new NewObjectiveView({sessionModel: this.session, collection: this.itemCollection})
       this.closeViews()
-      console.log('Route: new-objective. Id: ' + id + " type: " + typeof(id))
       
-      this.itemCollection.setCredentials(user, Settings.bnauth.appName, this.session.get('auth_token'))
-      this.itemCollection.setSearchUserId(user)
+      this.setUserCredentials()
+      $('#page-description').html(description)
+      //view.render()
+      window.views.push(view)
+      return view
+    },
+    
+    // renders the objective from the collection or fetches it via its model
+    renderEditObjective: function(id) {
+      var view = this.createNewOrEditObjectiveView("Muokkaa tavoitetta"),
+          itemToEdit = this.itemCollection.get(id),
+          username = this.session.get('user'),
+          appName = Settings.bnauth.appName
       
-      if (id) {
-        $('#page-description').html('Muokkaa tavoitetta')
+      if(!itemToEdit) {
+        itemToEdit = new Item({ id: id })
         this.itemCollection.setId(id)
-      } else 
-        $('#page-description').html('Uusi tavoite')
-      
-      this.itemCollection.fetch()
-      
-      console.log('renderNewObjective, itemCollectionSize: ' + this.itemCollection.length)
-      console.log(this.itemCollection)
-      var newObjectiveView = new NewObjectiveView({collection: this.itemCollection, sessionModel: this.session})
-      newObjectiveView.render()
-      window.views.push(newObjectiveView)
+        itemToEdit.url = this.itemCollection.url
+        itemToEdit.fetch({ success: function(model, resp) {
+          if(resp && resp.result && resp.result.data)
+            view.renderEdit(resp.result.data[0])
+          else
+            view.renderNotFound()
+        }})
+      } else
+        view.renderEdit(itemToEdit)
+    },
+    
+    renderNewObjective: function() {
+      this.createNewOrEditObjectiveView("Uusi tavoite").render()
     },
 
     renderRegister: function(){
@@ -136,8 +154,7 @@ define([
     closeViews: function(){
       _.each(window.views, function(view){
         if(typeof view.close != 'undefined'){
-          console.log('Closing view:')
-          console.log(view)
+          console.log('Closing view:' + view)
           view.close()
         }
       })
