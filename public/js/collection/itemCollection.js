@@ -7,16 +7,8 @@ define(['./../js/settings.js',
   var itemCollection = Backbone.Collection.extend({
     url: Settings.baseUrl + 'objectives', // default url when loading this first time
     model: Item,
-    parse: function(items){
-      // console.log('parsing...%o' , items)
-      var parsedModels = new Array()
-      _.each(items.result.data, function(item){
-      //  _.each(itemArray, function(item){
-          console.log(item)
-          parsedModels.push(new Item(item))
-        //})
-      })
-      return parsedModels
+    parse: function(resp) {
+      return _.map(resp.result.data, function(i) { return new Item(i); })
     },
     setCredentials: function(username, appName, sessionId){
       this.url = Settings.baseUrl + 'objectives'
